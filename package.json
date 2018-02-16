@@ -1,0 +1,22 @@
+{
+  "name": "comp6214-individual",
+  "version": "1.0.0",
+  "description": "Visualisation with D3",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MariaPet/comp6214-individual.git"
+  },
+  "author": "Maria Petriti",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/MariaPet/comp6214-individual/issues"
+  },
+  "homepage": "https://github.com/MariaPet/comp6214-individual#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
