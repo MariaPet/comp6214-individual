@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/MariaPet/comp6214-individual#readme",
   "dependencies": {
-    "express": "^4.16.2"
+    "d3": "^4.13.0",
+    "express": "^4.16.2",
+    "pg": "^7.4.1"
   }
 }
