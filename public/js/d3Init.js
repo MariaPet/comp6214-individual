@@ -6,7 +6,7 @@ function wrap(text, width) {
             line = [],
             lineNumber = 0,
             lineHeight = 1, //ems
-            y = text.attr("y") - 20,
+            y = text.attr("y"),
             x = text.attr("x"),
             dy = parseFloat(text.attr("dy")) || 0,
             // dx = parseFloat(text.attr("dx")),
@@ -50,11 +50,12 @@ $(document).ready(function() {
             left: 30
         }
         var colour = d3.scaleLinear().domain([0, 50, 100]).range([d3.rgb("#F5B7B1"), d3.rgb("#EC7063"), d3.rgb("#CB4335")])
+        
         var svg = d3.select('body').append('svg').attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom).append("g")
         .attr('transform', 'translate('+margin.left+','+margin.top+')');
 
-        var x = d3.scaleLinear().domain([-60, 10]).range([0, width]);
+        var x = d3.scaleLinear().domain([-58, 6]).range([0, width]);
         var y = d3.scaleLinear().domain([-50, 15]).range([height, 0]);
         var point = svg.selectAll(".point").data(dataset).enter();
         
@@ -74,14 +75,48 @@ $(document).ready(function() {
         
         //Circle labels
         point.append("text").text(function(d) {
-            return d["Agency Name"].replace("Department", "Dept.");
+            switch(d["Agency Name"]) {
+                case "Department of Transportation":
+                return "DOT";
+                case "Department of Labor":
+                return "DOL";
+                case "Department of Agriculture":
+                return "USDA";
+                case "Department of Veterans Affairs":
+                return "VA";
+                case "Department of Housing and Urban Development":
+                return "HUD";
+                case "Department of Commerce":
+                return "DOC";
+                case "Department of the Interior":
+                return "DOI";
+                case "Department of Homeland Security":
+                return "DHS";
+                case "Department of Health and Human Services":
+                return "HHS";
+                case "Department of the Treasury":
+                return "TRE";
+                case "Department of Defense":
+                return "DOD";
+                case "Department of Justice":
+                return "DOJ";
+                case "Department of State":
+                return "DOS";
+                case "Department of Education":
+                return "ED";
+                case "Department of Energy":
+                return "DOE";
+                default:
+                return d["Agency Name"];
+            }
         }).attr("x", function(d) {
             return x(d["Avg. Scedule Variance(%)"]);
         }).attr("y", function(d) {
             return y(d["Avg. Cost Variance(%)"]);
         })
+        .attr("dominant-baseline", "central")
         .attr("text-anchor", "middle")
-        .attr("class", "circle-label")
+        // .attr("class", "circle-label")
         
         svg.selectAll(".circle-label").call(wrap, 50)
         
