@@ -49,7 +49,9 @@ $(document).ready(function() {
             bottom: 30,
             left: 30
         }
-        var colour = d3.scaleLinear().domain([0, 50, 100]).range([d3.rgb("#F5B7B1"), d3.rgb("#EC7063"), d3.rgb("#CB4335")])
+        var colour = d3.scaleLinear().domain([0, 50, 100]).range([d3.rgb("#eeccff"), d3.rgb("#c44dff"), d3.rgb("#8800cc")]);
+        var borderColour = d3.scaleLinear().domain([0, 50, 100]).range([d3.rgb("#e6b3ff"), d3.rgb("#bb33ff"), d3.rgb("#7700b3")]);
+        // var borderColour = d3.scaleLinear().domain([0, 50, 100]).range([d3.rgb("#e6b3ff"), d3.rgb("#bb33ff"), d3.rgb("#7700b3")]);
         
         var svg = d3.select('body').append('svg').attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom).append("g")
@@ -68,8 +70,10 @@ $(document).ready(function() {
         }).attr("r", function(d) {
             return Math.sqrt(d["Projects Number"]/Math.PI) * 5;
         }).attr("stroke", function(d) {
-            return colour(d["Avg. Project Cost ($ M)"]);
-        }).attr("fill", function(d) {
+            return borderColour(d["Projects Number"]);
+        })
+        .attr("stroke-width", 5)
+        .attr("fill", function(d) {
             return colour(d["Projects Number"]);
         }).attr("opacity", 0.7)
         
@@ -116,7 +120,8 @@ $(document).ready(function() {
         })
         .attr("dominant-baseline", "central")
         .attr("text-anchor", "middle")
-        // .attr("class", "circle-label")
+        .attr("fill", "#fff")
+        .attr("class", "point-label")
         
         svg.selectAll(".circle-label").call(wrap, 50)
         
@@ -135,6 +140,9 @@ $(document).ready(function() {
         .attr("transform", "translate("+ (width + margin.left/2) + "," + y(0) + ")rotate(90)")
         .style("text-anchor", "middle")
         .text("Avg. Cost Variance(%)");
+
+        //Add event handlers
+        // svg.selectAll("circle").on("mouseover", function)
     });    
  
 });
