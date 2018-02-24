@@ -14,7 +14,7 @@ app.get('/api/aggregated', (req, res) => {
             console.log(err.stack);
             return; 
         }
-        client.query('Select * from aggregated_data', (err, result) => {
+        client.query('Select * from aggregated_data where "Agency Name" like $1', ["%Department%"], (err, result) => {
             client.end();
             if (err) {
                 res.send('Error retrieving data');
