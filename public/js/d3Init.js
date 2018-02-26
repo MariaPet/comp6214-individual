@@ -32,7 +32,7 @@ function redrawSVG(dataset) {
     //avgCost: data["Avg. Project Cost ($ M)"],
     //totalProjects: data["Projects Number"],
     //avgLifecycleCost: data["Avg. Lifecycle Cost ($ M)"]
-    
+
     d3.select("svg").remove();
     var width = 0.8 * window.innerWidth;
     var height = 0.8 * window.innerHeight;
@@ -42,8 +42,8 @@ function redrawSVG(dataset) {
         bottom: 30,
         left: 30
     }
-    var colour = d3.scaleLinear().domain([0, 50, 100]).range([d3.rgb("#eeccff"), d3.rgb("#c44dff"), d3.rgb("#8800cc")]);
-    var borderColour = d3.scaleLinear().domain([0, 50, 100]).range([d3.rgb("#e6b3ff"), d3.rgb("#bb33ff"), d3.rgb("#7700b3")]);
+    var colour = d3.scaleLinear().domain([0, 10, 20]).range([d3.rgb("#dd99ff"), d3.rgb("#b31aff"), d3.rgb("#660099")]);
+    var borderColour = d3.scaleLinear().domain([0, 10, 20]).range([d3.rgb("#d580ff"), d3.rgb("#aa00ff"), d3.rgb("#550080")]);
     
     //Tooltip div
     var tooltip = d3.select("body").append("div")
@@ -67,12 +67,13 @@ function redrawSVG(dataset) {
     }).attr("r", function(d) {
         return Math.sqrt(d["Projects Number"]/Math.PI) * 5;
     }).attr("stroke", function(d) {
-        return borderColour(d["Projects Number"]);
+        return borderColour(d["Avg. Project Cost ($ M)"]);
     })
     .attr("stroke-width", 5)
     .attr("fill", function(d) {
-        return colour(d["Projects Number"]);
-    }).attr("opacity", 0.7)
+        console.log(d["Avg. Project Cost ($ M)"]);
+        return colour(d["Avg. Project Cost ($ M)"]);
+    }).attr("opacity", 0.8)
     .on('mouseover', function(d) {
         d3.select(this).attr('r', function(d) {
             return Math.sqrt(d["Projects Number"]/Math.PI) * 5 * 1.2;
@@ -88,7 +89,7 @@ function redrawSVG(dataset) {
     .on("mouseout", function(d) {
         d3.select(this).attr('r', function(d) {
             return Math.sqrt(d["Projects Number"]/Math.PI) * 5;
-        }).attr("opacity", 0.7);
+        }).attr("opacity", 0.8);
         tooltip.transition()
             .duration(200)
             .style("opacity", 0);
