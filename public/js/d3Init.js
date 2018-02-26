@@ -86,12 +86,12 @@ $(document).ready(function() {
             }).attr("opacity", 1);
             tooltip.transition()
                 .duration(200)
-                .style("opacity", .9);
-            tooltip.html("Agency Name: " + d["Agency Name"] + "<br/>Number of Projects: " + d["Projects Number"])
-                .style("left", (d3.select(this).attr("cx")) + "px")
-                .style("top", (d3.select(this).attr("cy")) + "px");
+                .style("opacity", 1);
+            var pointRect = d3.select(this).node().getBoundingClientRect();
+            tooltip.html(d["Agency Name"] + "<br/>Number of Projects: " + d["Projects Number"])
+                .style("left", (pointRect.right) + "px")
+                .style("top", (pointRect.top) + "px");
         })
-        // })
         .on("mouseout", function(d) {
             d3.select(this).attr('r', function(d) {
                 return Math.sqrt(d["Projects Number"]/Math.PI) * 5;
