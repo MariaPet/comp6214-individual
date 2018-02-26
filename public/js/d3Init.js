@@ -76,6 +76,16 @@ $(document).ready(function() {
         .attr("fill", function(d) {
             return colour(d["Projects Number"]);
         }).attr("opacity", 0.7)
+        .on('mouseover', function(d) {
+            d3.select(this).attr('r', function(d) {
+                return Math.sqrt(d["Projects Number"]/Math.PI) * 5 * 1.2;
+            }).attr("opacity", 1);
+        })
+        .on("mouseout", function(d) {
+            d3.select(this).attr('r', function(d) {
+                return Math.sqrt(d["Projects Number"]/Math.PI) * 5;
+            }).attr("opacity", 0.7);
+        });
         
         //Circle labels
         point.append("text").text(function(d) {
