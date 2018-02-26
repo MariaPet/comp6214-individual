@@ -51,8 +51,12 @@ $(document).ready(function() {
         }
         var colour = d3.scaleLinear().domain([0, 50, 100]).range([d3.rgb("#eeccff"), d3.rgb("#c44dff"), d3.rgb("#8800cc")]);
         var borderColour = d3.scaleLinear().domain([0, 50, 100]).range([d3.rgb("#e6b3ff"), d3.rgb("#bb33ff"), d3.rgb("#7700b3")]);
-        // var borderColour = d3.scaleLinear().domain([0, 50, 100]).range([d3.rgb("#e6b3ff"), d3.rgb("#bb33ff"), d3.rgb("#7700b3")]);
         
+        //Tooltip div
+        var tooltip = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+
         var svg = d3.select('body').append('svg').attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom).append("g")
         .attr('transform', 'translate('+margin.left+','+margin.top+')');
@@ -80,11 +84,21 @@ $(document).ready(function() {
             d3.select(this).attr('r', function(d) {
                 return Math.sqrt(d["Projects Number"]/Math.PI) * 5 * 1.2;
             }).attr("opacity", 1);
+            tooltip.transition()
+                .duration(200)
+                .style("opacity", .9);
+            tooltip.html("Agency Name: " + d["Agency Name"] + "<br/>Number of Projects: " + d["Projects Number"])
+                .style("left", (d3.select(this).attr("cx")) + "px")
+                .style("top", (d3.select(this).attr("cy")) + "px");
         })
+        // })
         .on("mouseout", function(d) {
             d3.select(this).attr('r', function(d) {
                 return Math.sqrt(d["Projects Number"]/Math.PI) * 5;
             }).attr("opacity", 0.7);
+            tooltip.transition()
+                .duration(200)
+                .style("opacity", 0);
         });
         
         //Circle labels
@@ -144,15 +158,12 @@ $(document).ready(function() {
         .style("text-anchor", "middle")
         .text("Avg. Scedule Variance(%)");
 
-        svg.append("g").attr("transform", "translate("+ x(0) +", 0)").call(d3.axisLeft(y));//.attr("transform", "translate("+ (width)/2 +", 0)")
+        svg.append("g").attr("transform", "translate("+ x(0) +", 0)").call(d3.axisLeft(y));
 
         svg.append("text")             
         .attr("transform", "translate("+ (width + margin.left/2) + "," + y(0) + ")rotate(90)")
         .style("text-anchor", "middle")
         .text("Avg. Cost Variance(%)");
-
-        //Add event handlers
-        // svg.selectAll("circle").on("mouseover", function)
     });    
  
 });

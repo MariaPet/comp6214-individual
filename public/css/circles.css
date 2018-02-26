@@ -2,3 +2,7 @@
     text-shadow: 0px 0px 5px #00000077;
     pointer-events: none;
 }
+.tooltip {
+    position: fixed;
+    pointer-events: none;
+}
