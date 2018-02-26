@@ -34,6 +34,8 @@ function redrawSVG(dataset) {
     //avgLifecycleCost: data["Avg. Lifecycle Cost ($ M)"]
 
     d3.select("svg").remove();
+    d3.select(".tooltip").remove();
+
     var width = 0.8 * window.innerWidth;
     var height = 0.8 * window.innerHeight;
     var margin = {
@@ -56,7 +58,7 @@ function redrawSVG(dataset) {
 
     var x = d3.scaleLinear().domain([-58, 6]).range([0, width]);
     var y = d3.scaleLinear().domain([-50, 15]).range([height, 0]);
-    var point = svg.selectAll(".point").data(dataset).enter();
+    var point = svg.selectAll(".point").data(dataset).enter().append("g");
     
     //Circles
     point.append("circle").attr("class", "point")
@@ -75,8 +77,9 @@ function redrawSVG(dataset) {
         return colour(d["Avg. Project Cost ($ M)"]);
     }).attr("opacity", 0.8)
     .on('mouseover', function(d) {
+        // dS3.select(this.parentNode)
         d3.select(this).attr('r', function(d) {
-            return Math.sqrt(d["Projects Number"]/Math.PI) * 5 * 1.2;
+            return Math.sqrt(d["Projects Number"]/Math.PI) * 5 * 1.4;
         }).attr("opacity", 1);
         tooltip.transition()
             .duration(200)
@@ -94,8 +97,8 @@ function redrawSVG(dataset) {
             .duration(200)
             .style("opacity", 0);
     });
-    
-    //Circle labels
+
+    //Add circle labels
     point.append("text").text(function(d) {
         switch(d["Agency Name"]) {
             case "Department of Transportation":
@@ -139,9 +142,11 @@ function redrawSVG(dataset) {
     .attr("dominant-baseline", "central")
     .attr("text-anchor", "middle")
     .attr("fill", "#fff")
-    .attr("class", "point-label")
+    .attr("font-size", "12")
+    .attr("class", "point-label");
     
-    svg.selectAll(".circle-label").call(wrap, 50)
+    
+    // svg.selectAll(".circle-label").call(wrap, 50)
     
     //Axis and labels
     svg.append("g").attr("class", "x-axis").attr("transform", "translate(0, "+ y(0) +")")
