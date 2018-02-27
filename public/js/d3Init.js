@@ -60,6 +60,17 @@ function redrawSVG(dataset) {
     var y = d3.scaleLinear().domain([-50, 15]).range([height, 0]);
     var point = svg.selectAll(".point").data(dataset).enter().append("g");
     
+    //Group events
+    d3.selection.prototype.moveToFront = function() {
+        return this.each(function() {
+            this.parentNode.appendChild(this);
+        })
+    }
+    point.on('mouseover', function(d) {
+        console.log("fire")
+        d3.select(this).moveToFront();
+    })
+
     //Circles
     point.append("circle").attr("class", "point")
     .attr("cy", function(d) {
