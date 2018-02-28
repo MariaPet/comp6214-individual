@@ -13,6 +13,16 @@
     max-width: 200px;
     position: absolute;
     pointer-events: none;
-    background-color: #000000e7;
+    background-color: #5a5151e7;
     border-radius: 15px;
+}
+
+.filled {
+    fill: url(#mainGradient);
+}
+
+.outlined {
+    fill:   none;
+    stroke: url(#mainGradient);
+    stroke-width: 4;
 }

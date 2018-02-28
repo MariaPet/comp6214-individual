@@ -33,9 +33,57 @@ function redrawSVG(dataset) {
     //totalProjects: data["Projects Number"],
     //avgLifecycleCost: data["Avg. Lifecycle Cost ($ M)"]
 
-    d3.select("svg").remove();
+    d3.selectAll("svg").remove();
     d3.select(".tooltip").remove();
 
+    var colour = d3.scaleLinear().domain([0, 10, 20]).range([d3.rgb("#dd99ff"), d3.rgb("#b31aff"), d3.rgb("#660099")]);
+    var borderColour = d3.scaleLinear().domain([0, 10, 20]).range([d3.rgb("#d580ff"), d3.rgb("#aa00ff"), d3.rgb("#550080")]);
+    
+
+    var tooltipWidth = 200;
+    var tooltipScaleHeight = 50;
+    var tooltipPadding = 15;
+    var maxCost = d3.max(dataset, function(d) { return d["Avg. Project Cost ($ M)"]; } );
+    var minCost = d3.min(dataset, function(d) { return d["Avg. Project Cost ($ M)"]; } );
+    // var costScale = d3.scaleLinear().domain([minCost, maxCost]).range([0, tooltipWidth]);
+    //Tooltip div
+    var tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+    
+    tooltip.append("h3").attr("class", "tooltip-title")
+    var tooltipScale = tooltip.append("div").attr("class", "tooltip-scale")
+    tooltipScale.append('span').attr('id', 'min-cost')
+    
+    var tooltipSvg = tooltipScale.append('svg').attr('class', 'tooltip-metrics')
+    .attr('width', (tooltipWidth)).attr('height', tooltipScaleHeight)
+
+    var svgDefs = tooltipSvg.append('defs');
+    var mainGradient = svgDefs.append('linearGradient')
+                .attr('id', 'mainGradient');
+
+    // Create the stops of the main gradient. Each stop will be assigned
+    // a class to style the stop using CSS.
+    mainGradient.append('stop')
+        .attr('offset', '0')
+        .attr('stop-color', "#dd99ff");
+    mainGradient.append('stop')
+        .attr('offset', '0.5')
+        .attr('stop-color', "#b31aff");
+    mainGradient.append('stop')
+        .attr('offset', '1')
+        .attr('stop-color', "#660099");
+    
+    // Use the gradient to set the shape fill, via CSS.
+    tooltipSvg.append('rect')
+        .classed('filled', true)
+        .attr('x', tooltipPadding)
+        .attr('y', tooltipPadding)
+        .attr('width', (tooltipWidth) - 2 * tooltipPadding)
+        .attr('height', tooltipScaleHeight - 2 * tooltipPadding);
+
+    tooltipScale.append('span').attr('id', 'max-cost');
+    
     var width = 0.8 * window.innerWidth;
     var height = 0.8 * window.innerHeight;
     var margin = {
@@ -44,19 +92,12 @@ function redrawSVG(dataset) {
         bottom: 30,
         left: 30
     }
-    var colour = d3.scaleLinear().domain([0, 10, 20]).range([d3.rgb("#dd99ff"), d3.rgb("#b31aff"), d3.rgb("#660099")]);
-    var borderColour = d3.scaleLinear().domain([0, 10, 20]).range([d3.rgb("#d580ff"), d3.rgb("#aa00ff"), d3.rgb("#550080")]);
-    
-    //Tooltip div
-    var tooltip = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
 
     var svg = d3.select('body').append('svg').attr('width', width + margin.left + margin.right)
     .attr('height', height + margin.top + margin.bottom).append("g")
     .attr('transform', 'translate('+margin.left+','+margin.top+')');
 
-    var x = d3.scaleLinear().domain([-58, 6]).range([0, width]);
+    var x = d3.scaleLinear().domain([-58, 10]).range([0, width]);
     var y = d3.scaleLinear().domain([-50, 15]).range([height, 0]);
     var point = svg.selectAll(".point").data(dataset).enter().append("g");
     
@@ -67,7 +108,6 @@ function redrawSVG(dataset) {
         })
     }
     point.on('mouseover', function(d) {
-        console.log("fire")
         d3.select(this).moveToFront();
     })
 
@@ -90,15 +130,18 @@ function redrawSVG(dataset) {
     .on('mouseover', function(d) {
         // dS3.select(this.parentNode)
         d3.select(this).attr('r', function(d) {
-            return Math.sqrt(d["Projects Number"]/Math.PI) * 5 * 1.4;
+            return Math.sqrt(d["Projects Number"]/Math.PI) * 5 * 1.2;
         }).attr("opacity", 1);
         tooltip.transition()
             .duration(200)
             .style("opacity", 1);
         var pointRect = d3.select(this).node().getBoundingClientRect();
-        tooltip.html(d["Agency Name"] + "<br/>Number of Projects: " + d["Projects Number"])
-            .style("left", (pointRect.right) + "px")
-            .style("top", (pointRect.top) + "px");
+        tooltip.style("left", (pointRect.right) + "px")
+            .style("top", (pointRect.top) + "px")
+        d3.select(".tooltip-title").html(d["Agency Name"]);
+        d3.select('#min-cost').html(parseFloat(minCost).toFixed(2));
+        d3.select('#max-cost').html(parseFloat(maxCost).toFixed(2));
+            // .html(d["Agency Name"] + "<br/>Number of Projects: " + d["Projects Number"]);
     })
     .on("mouseout", function(d) {
         d3.select(this).attr('r', function(d) {
