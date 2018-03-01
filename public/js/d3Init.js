@@ -43,9 +43,8 @@ function redrawSVG(dataset) {
     var tooltipScaleWidth = 120;
     var tooltipScaleHeight = 20;
     var tooltipPadding = 5;
-    var maxCost = d3.max(dataset, function(d) { return d["Avg. Project Cost ($ M)"]; } );
-    var minCost = d3.min(dataset, function(d) { return d["Avg. Project Cost ($ M)"]; } );
-    // var costScale = d3.scaleLinear().domain([minCost, maxCost]).range([0, tooltipWidth]);
+    var maxCost = d3.max(dataset, function(d) { return +d["Avg. Project Cost ($ M)"]; } );
+    var minCost = d3.min(dataset, function(d) { return +d["Avg. Project Cost ($ M)"]; } );
     //Tooltip div
     var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
@@ -56,7 +55,7 @@ function redrawSVG(dataset) {
     tooltipScale.append('span').attr('id', 'min-cost').html(parseFloat(minCost).toFixed(2));
     
     var tooltipSvg = tooltipScale.append('svg').attr('class', 'tooltip-metrics')
-    .attr('width', (tooltipScaleWidth)).attr('height', (tooltipScaleHeight + 2*tooltipPadding))
+    .attr('width', (tooltipScaleWidth + 2*tooltipPadding)).attr('height', (tooltipScaleHeight + 2*tooltipPadding))
 
     var svgDefs = tooltipSvg.append('defs');
     var mainGradient = svgDefs.append('linearGradient')
@@ -77,14 +76,14 @@ function redrawSVG(dataset) {
     // Use the gradient to set the shape fill, via CSS.
     tooltipSvg.append('rect')
         .classed('filled', true)
-        .attr('x', 0)
+        .attr('x', tooltipPadding)
         .attr('y', tooltipPadding)
         .attr('width', tooltipScaleWidth)
         .attr('height', tooltipScaleHeight);
 
     tooltipSvg.append('rect')
         .attr('id', 'cost-index')
-        .attr('x', 0)
+        .attr('x', tooltipPadding)
         .attr('y', 0)
         .attr('width', 5)
         .attr('height', (tooltipScaleHeight + 2*tooltipPadding))
@@ -132,7 +131,6 @@ function redrawSVG(dataset) {
     })
     .attr("stroke-width", 5)
     .attr("fill", function(d) {
-        console.log(d["Avg. Project Cost ($ M)"]);
         return colour(d["Avg. Project Cost ($ M)"]);
     }).attr("opacity", 0.8)
     .on('mouseover', function(d) {
@@ -149,7 +147,7 @@ function redrawSVG(dataset) {
 
         //transform project cost index
         var dCost = ((maxCost - minCost) - (maxCost - d["Avg. Project Cost ($ M)"])) / (maxCost - minCost);
-        var indexTransform = tooltipScaleWidth * dCost;
+        var indexTransform = (tooltipScaleWidth * dCost);
         d3.select("#cost-index").attr('transform', 'translate('+indexTransform+',0)');
 
         d3.select(".tooltip-title").html(d["Agency Name"]);
@@ -196,6 +194,7 @@ function redrawSVG(dataset) {
             case "Department of Education":
             return "ED";
             case "Department of Energy":
+            console.log(d["Avg. Project Cost ($ M)"])
             return "DOE";
             default:
             return d["Agency Name"];
