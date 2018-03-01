@@ -83,6 +83,7 @@ function redrawSVG(dataset) {
         .attr('height', tooltipScaleHeight);
 
     tooltipSvg.append('rect')
+        .attr('id', 'cost-index')
         .attr('x', 0)
         .attr('y', 0)
         .attr('width', 5)
@@ -145,6 +146,12 @@ function redrawSVG(dataset) {
         var pointRect = d3.select(this).node().getBoundingClientRect();
         tooltip.style("left", (pointRect.right) + "px")
             .style("top", (pointRect.top) + "px")
+
+        //transform project cost index
+        var dCost = ((maxCost - minCost) - (maxCost - d["Avg. Project Cost ($ M)"])) / (maxCost - minCost);
+        var indexTransform = tooltipScaleWidth * dCost;
+        d3.select("#cost-index").attr('transform', 'translate('+indexTransform+',0)');
+
         d3.select(".tooltip-title").html(d["Agency Name"]);
             // .html(d["Agency Name"] + "<br/>Number of Projects: " + d["Projects Number"]);
     })
