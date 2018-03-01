@@ -40,9 +40,9 @@ function redrawSVG(dataset) {
     var borderColour = d3.scaleLinear().domain([0, 10, 20]).range([d3.rgb("#d580ff"), d3.rgb("#aa00ff"), d3.rgb("#550080")]);
     
 
-    var tooltipWidth = 200;
-    var tooltipScaleHeight = 50;
-    var tooltipPadding = 15;
+    var tooltipScaleWidth = 120;
+    var tooltipScaleHeight = 20;
+    var tooltipPadding = 5;
     var maxCost = d3.max(dataset, function(d) { return d["Avg. Project Cost ($ M)"]; } );
     var minCost = d3.min(dataset, function(d) { return d["Avg. Project Cost ($ M)"]; } );
     // var costScale = d3.scaleLinear().domain([minCost, maxCost]).range([0, tooltipWidth]);
@@ -53,10 +53,10 @@ function redrawSVG(dataset) {
     
     tooltip.append("h3").attr("class", "tooltip-title")
     var tooltipScale = tooltip.append("div").attr("class", "tooltip-scale")
-    tooltipScale.append('span').attr('id', 'min-cost')
+    tooltipScale.append('span').attr('id', 'min-cost').html(parseFloat(minCost).toFixed(2));
     
     var tooltipSvg = tooltipScale.append('svg').attr('class', 'tooltip-metrics')
-    .attr('width', (tooltipWidth)).attr('height', tooltipScaleHeight)
+    .attr('width', (tooltipScaleWidth)).attr('height', (tooltipScaleHeight + 2*tooltipPadding))
 
     var svgDefs = tooltipSvg.append('defs');
     var mainGradient = svgDefs.append('linearGradient')
@@ -77,12 +77,19 @@ function redrawSVG(dataset) {
     // Use the gradient to set the shape fill, via CSS.
     tooltipSvg.append('rect')
         .classed('filled', true)
-        .attr('x', tooltipPadding)
+        .attr('x', 0)
         .attr('y', tooltipPadding)
-        .attr('width', (tooltipWidth) - 2 * tooltipPadding)
-        .attr('height', tooltipScaleHeight - 2 * tooltipPadding);
+        .attr('width', tooltipScaleWidth)
+        .attr('height', tooltipScaleHeight);
 
-    tooltipScale.append('span').attr('id', 'max-cost');
+    tooltipSvg.append('rect')
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('width', 5)
+        .attr('height', (tooltipScaleHeight + 2*tooltipPadding))
+        .attr('fill', 'black')
+
+    tooltipScale.append('span').attr('id', 'max-cost').html(parseFloat(maxCost).toFixed(2));;
     
     var width = 0.8 * window.innerWidth;
     var height = 0.8 * window.innerHeight;
@@ -139,8 +146,6 @@ function redrawSVG(dataset) {
         tooltip.style("left", (pointRect.right) + "px")
             .style("top", (pointRect.top) + "px")
         d3.select(".tooltip-title").html(d["Agency Name"]);
-        d3.select('#min-cost').html(parseFloat(minCost).toFixed(2));
-        d3.select('#max-cost').html(parseFloat(maxCost).toFixed(2));
             // .html(d["Agency Name"] + "<br/>Number of Projects: " + d["Projects Number"]);
     })
     .on("mouseout", function(d) {

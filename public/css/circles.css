@@ -10,7 +10,7 @@
     color: #fff;
     padding: 10px;
     margin-left: 10px;
-    max-width: 200px;
+    width: 200px;
     position: absolute;
     pointer-events: none;
     background-color: #5a5151e7;
@@ -21,8 +21,8 @@
     fill: url(#mainGradient);
 }
 
-.outlined {
-    fill:   none;
-    stroke: url(#mainGradient);
-    stroke-width: 4;
+.tooltip-scale {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
 }
