@@ -36,8 +36,7 @@ function redrawSVG(dataset) {
     d3.selectAll("svg").remove();
     d3.select(".tooltip").remove();
 
-    var colour = d3.scaleLinear().domain([0, 10, 20]).range([d3.rgb("#dd99ff"), d3.rgb("#b31aff"), d3.rgb("#660099")]);
-    var borderColour = d3.scaleLinear().domain([0, 10, 20]).range([d3.rgb("#d580ff"), d3.rgb("#aa00ff"), d3.rgb("#550080")]);
+    
     
 
     var tooltipScaleWidth = 120;
@@ -45,6 +44,9 @@ function redrawSVG(dataset) {
     var tooltipPadding = 5;
     var maxCost = d3.max(dataset, function(d) { return +d["Avg. Project Cost ($ M)"]; } );
     var minCost = d3.min(dataset, function(d) { return +d["Avg. Project Cost ($ M)"]; } );
+    var colour = d3.scaleLinear().domain([minCost, maxCost]).range([d3.rgb("#dd99ff"), d3.rgb("#b31aff"), d3.rgb("#660099")]);
+    var borderColour = d3.scaleLinear().domain([minCost, maxCost]).range([d3.rgb("#d580ff"), d3.rgb("#aa00ff"), d3.rgb("#550080")]);
+
     //Tooltip div
     var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
