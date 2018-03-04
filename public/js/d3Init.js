@@ -275,17 +275,22 @@ function redrawSVG(dataset) {
 }
 
 $(document).ready(function() {
-
-    d3.json("http://students.ecs.soton.ac.uk/mp2n17/comp6214-individual:5000/api/aggregated", function(error, dataset) {
-        if(error) {
-            console.log(error);
-        }
-        // debugger;
-        redrawSVG(dataset);
+    dataset = [{"Agency Name":"Department of the Treasury","Avg. Scedule Variance(%)":"-7.3542592592592593","Avg. Cost Variance(%)":"-21.3346296296296296","Projects Number":"54","Avg. Lifecycle Cost ($ M)":"11.8355956481481481","Avg. Project Cost ($ M)":"7.1274197592592593"},{"Agency Name":"Department of Health and Human Services","Avg. Scedule Variance(%)":"-7.6834905660377358","Avg. Cost Variance(%)":"-5.5777358490566038","Projects Number":"106","Avg. Lifecycle Cost ($ M)":"2.1199056603773585","Avg. Project Cost ($ M)":"1.4192547169811321"},{"Agency Name":"Department of Defense","Avg. Scedule Variance(%)":"-9.4443939393939394","Avg. Cost Variance(%)":"-45.8972727272727273","Projects Number":"66","Avg. Lifecycle Cost ($ M)":"77.6045000000000000","Avg. Project Cost ($ M)":"20.2586969696969697"},{"Agency Name":"Department of Labor","Avg. Scedule Variance(%)":"-43.1093589743589744","Avg. Cost Variance(%)":"-3.6369230769230769","Projects Number":"78","Avg. Lifecycle Cost ($ M)":"0.83889850000000000000","Avg. Project Cost ($ M)":"0.59469578205128205128"},{"Agency Name":"Department of Housing and Urban Development","Avg. Scedule Variance(%)":"-21.6216666666666667","Avg. Cost Variance(%)":"0.00000000000000000000","Projects Number":"6","Avg. Lifecycle Cost ($ M)":"8.8896186666666667","Avg. Project Cost ($ M)":"5.9428190000000000"},{"Agency Name":"Department of State","Avg. Scedule Variance(%)":"-1.2563829787234043","Avg. Cost Variance(%)":"-1.4346808510638298","Projects Number":"47","Avg. Lifecycle Cost ($ M)":"4617.2071305957446809","Avg. Project Cost ($ M)":"7.8287155106382979"},{"Agency Name":"Department of Agriculture","Avg. Scedule Variance(%)":"-35.4921666666666667","Avg. Cost Variance(%)":"2.5518333333333333","Projects Number":"60","Avg. Lifecycle Cost ($ M)":"33.2353252500000000","Avg. Project Cost ($ M)":"15.3949755000000000"},{"Agency Name":"Department of Transportation","Avg. Scedule Variance(%)":"-54.0367096774193548","Avg. Cost Variance(%)":"1.6158709677419355","Projects Number":"155","Avg. Lifecycle Cost ($ M)":"17.0386196774193548","Avg. Project Cost ($ M)":"8.0208655161290323"},{"Agency Name":"Department of Education","Avg. Scedule Variance(%)":"-0.80230769230769230769","Avg. Cost Variance(%)":"-38.8011538461538462","Projects Number":"26","Avg. Lifecycle Cost ($ M)":"7.3695092692307692","Avg. Project Cost ($ M)":"1.6296564230769231"},{"Agency Name":"Department of Veterans Affairs","Avg. Scedule Variance(%)":"-25.1517605633802817","Avg. Cost Variance(%)":"0.65992957746478873239","Projects Number":"142","Avg. Lifecycle Cost ($ M)":"21.6639594366197183","Avg. Project Cost ($ M)":"5.1199812464788732"},{"Agency Name":"Department of the Interior","Avg. Scedule Variance(%)":"-15.5929629629629630","Avg. Cost Variance(%)":"11.6729629629629630","Projects Number":"27","Avg. Lifecycle Cost ($ M)":"1889.5998500370370370","Avg. Project Cost ($ M)":"12.1350581481481481"},{"Agency Name":"Department of Commerce","Avg. Scedule Variance(%)":"-17.4043502824858757","Avg. Cost Variance(%)":"-6.5764406779661017","Projects Number":"177","Avg. Lifecycle Cost ($ M)":"14.1679013333333333","Avg. Project Cost ($ M)":"6.2207239661016949"},{"Agency Name":"Department of Homeland Security","Avg. Scedule Variance(%)":"-7.6106875000000000","Avg. Cost Variance(%)":"-1.9022500000000000","Projects Number":"160","Avg. Lifecycle Cost ($ M)":"31.8182687500000000","Avg. Project Cost ($ M)":"5.3145250000000000"},{"Agency Name":"Department of Justice","Avg. Scedule Variance(%)":"-2.8815789473684211","Avg. Cost Variance(%)":"2.5178947368421053","Projects Number":"19","Avg. Lifecycle Cost ($ M)":"7.6218081052631579","Avg. Project Cost ($ M)":"7.3080058947368421"},{"Agency Name":"Department of Energy","Avg. Scedule Variance(%)":"4.6423684210526316","Avg. Cost Variance(%)":"2.8492105263157895","Projects Number":"38","Avg. Lifecycle Cost ($ M)":"27.9439312368421053","Avg. Project Cost ($ M)":"27.7321418947368421"}]
+    redrawSVG(dataset);
         
-        $(window).resize( function() {
-            redrawSVG(dataset);
-        });
-    })
+    $(window).resize( function() {
+        redrawSVG(dataset);
+    });
+    // d3.json("http://students.ecs.soton.ac.uk/mp2n17/comp6214-individual:5000/api/aggregated", function(error, dataset) {
+    //     if(error) {
+    //         console.log(error);
+    //     }
+    //     // debugger;
+    //     redrawSVG(dataset);
+        
+    //     $(window).resize( function() {
+    //         redrawSVG(dataset);
+    //     });
+    // })
 });
 

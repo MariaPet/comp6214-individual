@@ -4,7 +4,7 @@ const  DB_CONF  = require('./db-config')
 const express = require('express');
 const app = express();
 
-app.set('port', (process.env.PORT || 80));
+app.set('port', (process.env.PORT || 5000));
 app.use("/", express.static(__dirname + '/public'));
 
 app.get('/api/aggregated', (req, res) => {
