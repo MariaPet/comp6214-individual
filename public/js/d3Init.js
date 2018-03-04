@@ -276,9 +276,7 @@ function redrawSVG(dataset) {
 
 $(document).ready(function() {
 
-    var q = d3.queue();
-    var render = q.defer(d3.json, "http://localhost:5000/api/aggregated")
-    .await(function(error, dataset) {
+    d3.json("http://localhost:5000/api/aggregated", function(error, dataset) {
         if(error) {
             console.log(error);
         }
@@ -288,6 +286,6 @@ $(document).ready(function() {
         $(window).resize( function() {
             redrawSVG(dataset);
         });
-    }); 
+    })
 });
 

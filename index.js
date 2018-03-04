@@ -16,10 +16,20 @@ app.get('/api/aggregated', (req, res) => {
         }
         client.query('Select * from aggregated_data where "Agency Name" like $1', ["%Department%"], (err, result) => {
             client.end();
+            var fs = require('fs');
             if (err) {
-                res.send('Error retrieving data');
+                var obj = JSON.parse(fs.readFileSync('data.json', 'utf8'));
+                if (obj) {
+                    res.setHeader('Content-Type', 'application/json');
+                    res.send(obj);
+                }
+                else {
+                    res.send('Error retrieving data');
+                }
             }
             else {
+                var dictstring = JSON.stringify(result.rows);
+                fs.writeFile("data.json", dictstring);
                 res.setHeader('Content-Type', 'application/json');
                 res.send(result.rows);
             }
