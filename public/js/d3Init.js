@@ -276,7 +276,7 @@ function redrawSVG(dataset) {
 
 $(document).ready(function() {
 
-    d3.json("http://students.ecs.soton.ac.uk/api/aggregated", function(error, dataset) {
+    d3.json("http://students.ecs.soton.ac.uk/mp2n17/comp6214-individual/api/aggregated", function(error, dataset) {
         if(error) {
             console.log(error);
         }
