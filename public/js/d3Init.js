@@ -51,11 +51,14 @@ function redrawSVG(dataset) {
     .style("opacity", 0);
     
     tooltip.append("h3").attr("class", "tooltip-title")
+    tooltip.append("p").attr("class", "project-number");
+    tooltip.append("p").html("Average project cost in million dollars ($), compared to the other departments:");
     var tooltipScale = tooltip.append("div").attr("class", "tooltip-scale")
     tooltipScale.append('span').attr('id', 'min-cost').html(parseFloat(minCost).toFixed(2));
     
     var tooltipSvg = tooltipScale.append('svg').attr('class', 'tooltip-metrics')
     .attr('width', (tooltipScaleWidth + 2*tooltipPadding)).attr('height', (tooltipScaleHeight + 2*tooltipPadding))
+    .attr('transform', 'translate('+tooltipPadding+',0)');
 
     var svgDefs = tooltipSvg.append('defs');
     var mainGradient = svgDefs.append('linearGradient')
@@ -81,13 +84,36 @@ function redrawSVG(dataset) {
         .attr('width', tooltipScaleWidth)
         .attr('height', tooltipScaleHeight);
 
-    tooltipSvg.append('rect')
-        .attr('id', 'cost-index')
+    
+    var costIndexGroup = tooltipSvg.append('g').attr('id', 'cost-index')    
+
+    costIndexGroup.append('rect')
         .attr('x', tooltipPadding)
         .attr('y', 0)
-        .attr('width', 5)
+        .attr('width', 3)
         .attr('height', (tooltipScaleHeight + 2*tooltipPadding))
         .attr('fill', 'black')
+
+    
+    costIndexGroup.append('rect')
+    .attr("class", "cost-value-bg")
+    .attr('x', 0)
+    .attr("y", (tooltipScaleHeight + 2*tooltipPadding)/2)
+    .attr('width', 30)
+    .attr('height', 15)
+    .attr('transform', 'translate('+(-2*tooltipPadding)+', '+(-1.5*tooltipPadding)+')')
+    .attr("fill", "black")
+    .attr("opacity", "0.5")
+    // .attr("dominant-baseline", "central")
+    
+    costIndexGroup.append('text').text('test')
+    .attr("x", tooltipPadding)
+    .attr("y", (tooltipScaleHeight + 2*tooltipPadding)/2)
+    .attr("dominant-baseline", "central")
+    .attr("text-anchor", "middle")
+    .attr("fill", "#fff")
+    .attr("font-size", "12")
+    .attr("class", "cost-value");
 
     tooltipScale.append('span').attr('id', 'max-cost').html(parseFloat(maxCost).toFixed(2));;
     
@@ -143,14 +169,15 @@ function redrawSVG(dataset) {
             .style("opacity", 1);
         var pointRect = d3.select(this).node().getBoundingClientRect();
         tooltip.style("left", (pointRect.right) + "px")
-            .style("top", (pointRect.top) + "px")
+            .style("top", (pointRect.top - 60) + "px")
 
         //transform project cost index
         var dCost = ((maxCost - minCost) - (maxCost - d["Avg. Project Cost ($ M)"])) / (maxCost - minCost);
         var indexTransform = (tooltipScaleWidth * dCost);
         d3.select("#cost-index").attr('transform', 'translate('+indexTransform+',0)');
-
+        d3.select(".cost-value").text((+d["Avg. Project Cost ($ M)"]).toFixed(2))
         d3.select(".tooltip-title").html(d["Agency Name"]);
+        d3.select(".project-number").html("Number of projects: " + d["Projects Number"])
             // .html(d["Agency Name"] + "<br/>Number of Projects: " + d["Projects Number"]);
     })
     .on("mouseout", function(d) {
@@ -230,6 +257,21 @@ function redrawSVG(dataset) {
     .attr("transform", "translate("+ (width + margin.left/2) + "," + y(0) + ")rotate(90)")
     .style("text-anchor", "middle")
     .text("Avg. Cost Variance(%)");
+
+//     var area = d3.svg.area()
+//     .interpolate("basis")
+//     .x(function(d) { return x(d.date); })
+//     .y1(function(d) { return y(d["Thunderbird"]); });
+
+//     svg.append("clipPath")
+//       .attr("id", "clip-above")
+//     .append("path")
+//       .attr("d", area.y0(0));
+
+//   svg.append("path")
+//       .attr("class", "area above")
+//       .attr("clip-path", "url(#clip-above)")
+//       .attr("d", area.y0(function(d) { return y(d["Normal"]); }));
 }
 
 $(document).ready(function() {
