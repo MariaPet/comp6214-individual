@@ -276,11 +276,11 @@ function redrawSVG(dataset) {
 
 $(document).ready(function() {
 
-    d3.json("http://localhost:5000/api/aggregated", function(error, dataset) {
+    d3.json("http://students.ecs.soton.ac.uk/api/aggregated", function(error, dataset) {
         if(error) {
             console.log(error);
         }
-
+        debugger;
         redrawSVG(dataset);
         
         $(window).resize( function() {
