@@ -37,4 +37,4 @@ app.get('/api/aggregated', (req, res) => {
     });  
 });
 
-app.listen(app.get('port'), () => console.log('App is listening to 5000'));
+app.listen(app.get('port'), () => console.log('App is listening to ' + app.get('port')));
