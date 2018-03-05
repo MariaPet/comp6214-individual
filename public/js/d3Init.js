@@ -36,9 +36,6 @@ function redrawSVG(dataset) {
     d3.selectAll("svg").remove();
     d3.select(".tooltip").remove();
 
-    
-    
-
     var tooltipScaleWidth = 120;
     var tooltipScaleHeight = 20;
     var tooltipPadding = 5;
@@ -119,7 +116,7 @@ function redrawSVG(dataset) {
 
     tooltipScale.append('span').attr('id', 'max-cost').html(parseFloat(maxCost).toFixed(2));;
     
-    var width = 0.8 * window.innerWidth;
+    var width = 0.7 * window.innerWidth;
     var height = 0.8 * window.innerHeight;
     var margin = {
         top: 30,
@@ -260,6 +257,32 @@ function redrawSVG(dataset) {
     .style("text-anchor", "middle")
     .text("Avg. Cost Variance(%)");
 
+    //legend
+
+    var legendWidth = 0.1 * window.innerWidth;
+    var legendHeight = 0.8 * window.innerHeight;
+    var legendMargin = {
+        top: 15,
+        right: 15,
+        bottom: 15,
+        left: 15
+    }
+    var legendSvg = d3.select('body').append('svg').attr('width', legendWidth + legendMargin.left + legendMargin.right)
+    .attr('height', legendHeight + legendMargin.top + legendMargin.bottom).append("g")
+    .attr('transform', 'translate('+legendMargin.left+','+legendMargin.top+')');
+    
+    var items = legendSvg.selectAll(".legendItem")
+    .data(dataset)
+    .enter().append("g")
+    .attr("class","legendItem")
+
+    items.append("text")
+    .datum(function(d) {return {name: d["Agency Name"]};})
+    .text(function(d) { return d.name; })
+    .style("font", "10px sans-serif")
+    .attr("text-anchor", "right")
+    .attr("alignment-baseline", "middle")
+    .attr("transform", function(d,i){return "translate(15,0)"});
 //     var area = d3.svg.area()
 //     .interpolate("basis")
 //     .x(function(d) { return x(d.date); })
