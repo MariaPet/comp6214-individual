@@ -41,6 +41,8 @@ function redrawSVG(dataset) {
     var tooltipPadding = 5;
     var maxCost = d3.max(dataset, function(d) { return +d["Avg. Project Cost ($ M)"]; } );
     var minCost = d3.min(dataset, function(d) { return +d["Avg. Project Cost ($ M)"]; } );
+    var maxProject = d3.max(dataset, function(d) { return +d["Projects Number"]; } );
+    var minProject = d3.min(dataset, function(d) { return +d["Projects Number"]; } );
     var colour = d3.scaleLinear().domain([minCost, maxCost]).range([d3.rgb("#dd99ff"), d3.rgb("#b31aff"), d3.rgb("#660099")]);
     var borderColour = d3.scaleLinear().domain([minCost, maxCost]).range([d3.rgb("#d580ff"), d3.rgb("#aa00ff"), d3.rgb("#550080")]);
 
@@ -116,7 +118,7 @@ function redrawSVG(dataset) {
 
     tooltipScale.append('span').attr('id', 'max-cost').html(parseFloat(maxCost).toFixed(2));;
     
-    var width = 0.7 * window.innerWidth;
+    var width = 0.65 * window.innerWidth;
     var height = 0.8 * window.innerHeight;
     var margin = {
         top: 30,
@@ -145,6 +147,9 @@ function redrawSVG(dataset) {
 
     //Circles
     point.append("circle").attr("class", "point")
+    .attr("id", function(d) {
+        return d["Agency Name"];
+    })
     .attr("cy", function(d) {
         return y(d["Avg. Cost Variance(%)"]);
     }).attr("cx", function(d) {
@@ -259,7 +264,7 @@ function redrawSVG(dataset) {
 
     //legend
 
-    var legendWidth = 0.1 * window.innerWidth;
+    var legendWidth = 0.25 * window.innerWidth;
     var legendHeight = 0.8 * window.innerHeight;
     var legendMargin = {
         top: 15,
@@ -268,21 +273,114 @@ function redrawSVG(dataset) {
         left: 15
     }
     var legendSvg = d3.select('body').append('svg').attr('width', legendWidth + legendMargin.left + legendMargin.right)
-    .attr('height', legendHeight + legendMargin.top + legendMargin.bottom).append("g")
-    .attr('transform', 'translate('+legendMargin.left+','+legendMargin.top+')');
+    .attr('height', (dataset.length+1)*35 + legendMargin.top + legendMargin.bottom)
+    .attr('transform', 'translate('+legendMargin.left+',0)')
+    .append("g")
     
+    
+    legendSvg.append("rect")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", legendWidth)
+    .attr("height", (dataset.length+1)*35)
+    .attr("fill", d3.rgb("#e0e0eb"))
+    .attr("stroke", "black")
+    .attr('stroke-width', "1")
+    
+
+    legendSvg.append("text").text("Department of :")
+    .attr("text-anchor", "right")
+    .attr('y', 35/2)
+    .attr('x', legendMargin.left)
+
     var items = legendSvg.selectAll(".legendItem")
-    .data(dataset)
+    .data(dataset.sort(function(a, b){return a["Projects Number"] - b["Projects Number"]}))
     .enter().append("g")
     .attr("class","legendItem")
 
+    items.append("rect").attr('class', "legend-separator")
+    .attr("x", 0)
+    .attr("width", legendWidth)
+    .attr("y", function(d, i) { return (i*35 + 35 )})
+    .attr("height", 35)
+    .attr("fill", d3.rgb("#e0e0eb"))
+    .attr("stroke", "black")
+    .attr('stroke-width', "1")
+    .on('mouseover', function(d) {
+        d3.select(this).attr("fill", d3.rgb("#a2a2c3"));
+        var points = d3.selectAll(".point");
+        points.each(function(point, i) {
+            if (point["Agency Name"] === d["Agency Name"]) {
+                d3.select(this).attr('r', function(d) {
+                    return Math.sqrt(d["Projects Number"]/Math.PI) * 5 * 1.2;
+                }).attr("opacity", 1);
+            }
+        })
+        
+    })
+    .on("mouseout", function(d) {
+        d3.select(this).attr("fill", d3.rgb("#e0e0eb"));
+        var points = d3.selectAll(".point");
+        points.each(function(point, i) {
+            if (point["Agency Name"] === d["Agency Name"]) {
+                d3.select(this).attr('r', function(d) {
+                    return Math.sqrt(d["Projects Number"]/Math.PI) * 5;
+                }).attr("opacity", 0.7);
+            }
+        })
+    });
+
+    items.append('rect')
+    .attr('width', function(d) {
+        var dProject = ((maxProject - minProject) - (maxProject - d["Projects Number"])) / (maxProject - minProject);
+        return (legendWidth * dProject) || 5;
+    })
+    .attr("height", 35)
+    .attr("fill", d3.rgb("#003399"))
+    .attr("y", function(d, i) { return (i*35 + 35 )})
+    .attr("x", function(d) {
+        var dProject = ((maxProject - minProject) - (maxProject - d["Projects Number"])) / (maxProject - minProject);
+        return legendWidth - (legendWidth * dProject || 5);
+    })
+    .style("pointer-events", "none")
+    .attr("opacity", "0.5")
+
+    items.append('circle')
+    .attr("r", 5)
+    .attr("fill", function(d) {
+        return colour(d["Avg. Project Cost ($ M)"]);
+    })
+    .attr("transform", function(d,i){return "translate("+ legendMargin.left +","+ (i*35 + 35*1.5) +")"})
+    .style("pointer-events", "none");
+
     items.append("text")
-    .datum(function(d) {return {name: d["Agency Name"]};})
+    .datum(function(d) {return {name: d["Agency Name"].replace('Department of ','')};})
     .text(function(d) { return d.name; })
     .style("font", "10px sans-serif")
     .attr("text-anchor", "right")
     .attr("alignment-baseline", "middle")
-    .attr("transform", function(d,i){return "translate(15,0)"});
+    .attr("transform", function(d,i){return "translate("+ 2*legendMargin.left +","+ (i*35 + 35*1.5) +")"})
+    .style("pointer-events", "none");
+
+    items.append("text")
+    .text(function(d) { return d["Projects Number"] + " projects"; })
+    .style("font", "10px sans-serif")
+    .attr("text-anchor", "left")
+    .attr("alignment-baseline", "middle")
+    .attr("transform", function(d,i){return "translate("+ (legendWidth-5*legendMargin.left) +","+ (i*35 + 35*1.5) +")"})
+    .style("pointer-events", "none");
+    // items.append("line").attr('class', "legend-separator")
+    // .attr("x1", 0)
+    // .attr("x2", legendWidth)
+    // .attr("y1", function(d, i) { return (i*35 + 3*legendMargin.top )})
+    // .attr("y2", function(d, i) { return (i*35 + 3*legendMargin.top )})
+    // // .attr("transform", function(d,i){return "translate(15,"+ (i*20 + 2*legendMargin.top) +")"})
+    // .attr("stroke", "black")
+    // .attr('stroke-width', "1")
+    // .attr("stroke-linecap", "butt")
+
+    
+
 //     var area = d3.svg.area()
 //     .interpolate("basis")
 //     .x(function(d) { return x(d.date); })
