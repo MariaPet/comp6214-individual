@@ -119,20 +119,60 @@ function redrawSVG(dataset) {
     tooltipScale.append('span').attr('id', 'max-cost').html(parseFloat(maxCost).toFixed(2));;
     
     var width = 0.65 * window.innerWidth;
-    var height = 0.8 * window.innerHeight;
+    var height = 600;
     var margin = {
         top: 30,
         right: 30,
         bottom: 30,
         left: 30
     }
-
     var svg = d3.select('body').append('svg').attr('width', width + margin.left + margin.right)
     .attr('height', height + margin.top + margin.bottom).append("g")
     .attr('transform', 'translate('+margin.left+','+margin.top+')');
-
     var x = d3.scaleLinear().domain([-58, 10]).range([0, width]);
     var y = d3.scaleLinear().domain([-50, 15]).range([height, 0]);
+    
+    //Axis and labels
+    svg.append("g").attr("class", "x-axis").attr("transform", "translate(0, "+ y(0) +")")
+    .call(d3.axisBottom(x));
+    
+    svg.append("text")
+    .attr('class', 'x-axis-label')            
+    .attr("transform", "translate(" + x(0) + " ," + -10 + ")")
+    .style("text-anchor", "middle")
+    .text("Avg. Scedule Variance(%)");
+
+    svg.append("g").attr("class", "y-axis").attr("transform", "translate("+ x(0) +", 0)").call(d3.axisLeft(y));
+
+    svg.append("text")
+    .attr('class', 'y-axis-label')             
+    .attr("transform", "translate("+ (width + margin.left/2) + "," + y(0) + ")rotate(90)")
+    .style("text-anchor", "middle")
+    .text("Avg. Cost Variance(%)");
+
+    svg.append("text").text("In Time & In Budget")
+    .attr('class','quarter-label')
+    .attr('x', (x(0) + x(10))/2)
+    .attr('y', (y(0) + y(20))/2)
+
+    svg.append("text").text("In Time & Out of Budget")
+    .attr('class','quarter-label')
+    .attr('x', (x(0) + x(-15))/2)
+    .attr('y', (y(0) + y(20))/2)
+
+    svg.append("text").text("Late & In Budget")
+    .attr('class','quarter-label')
+    .attr('x', (x(0) + x(10))/2)
+    .attr('y', (y(0) + y(-20))/2)
+
+    svg.append("text").text("Late & Out of Budget")
+    .attr('class','quarter-label')
+    .attr('x', (x(0) + x(-15))/2)
+    .attr('y', (y(0) + y(-20))/2)   
+
+    svg.selectAll(".quarter-label").call(wrap, 80)
+
+    //Data drawing
     var point = svg.selectAll(".point").data(dataset).enter().append("g");
     
     //Group events
@@ -141,9 +181,6 @@ function redrawSVG(dataset) {
             this.parentNode.appendChild(this);
         })
     }
-    point.on('mouseover', function(d) {
-        d3.select(this).moveToFront();
-    })
 
     //Circles
     point.append("circle").attr("class", "point")
@@ -168,6 +205,7 @@ function redrawSVG(dataset) {
         d3.select(this).attr('r', function(d) {
             return Math.sqrt(d["Projects Number"]/Math.PI) * 5 * 1.2;
         }).attr("opacity", 1);
+        tooltip.moveToFront();
         tooltip.transition()
             .duration(200)
             .style("opacity", 1);
@@ -241,26 +279,9 @@ function redrawSVG(dataset) {
     .attr("font-size", "12")
     .attr("class", "point-label");
     
-    
-    // svg.selectAll(".circle-label").call(wrap, 50)
-    
-    //Axis and labels
-    svg.append("g").attr("class", "x-axis").attr("transform", "translate(0, "+ y(0) +")")
-    .call(d3.axisBottom(x));
-    
-    svg.append("text")
-    .attr('class', 'x-axis-label')            
-    .attr("transform", "translate(" + x(0) + " ," + -10 + ")")
-    .style("text-anchor", "middle")
-    .text("Avg. Scedule Variance(%)");
-
-    svg.append("g").attr("class", "y-axis").attr("transform", "translate("+ x(0) +", 0)").call(d3.axisLeft(y));
-
-    svg.append("text")
-    .attr('class', 'y-axis-label')             
-    .attr("transform", "translate("+ (width + margin.left/2) + "," + y(0) + ")rotate(90)")
-    .style("text-anchor", "middle")
-    .text("Avg. Cost Variance(%)");
+    point.on('mouseover', function(d) {
+        d3.select(this).moveToFront();
+    })
 
     //legend
 
@@ -272,6 +293,7 @@ function redrawSVG(dataset) {
         bottom: 15,
         left: 15
     }
+
     var legendSvg = d3.select('body').append('svg').attr('width', legendWidth + legendMargin.left + legendMargin.right)
     .attr('height', (dataset.length+1)*35 + legendMargin.top + legendMargin.bottom)
     .attr('transform', 'translate('+legendMargin.left+',0)')
@@ -369,32 +391,6 @@ function redrawSVG(dataset) {
     .attr("alignment-baseline", "middle")
     .attr("transform", function(d,i){return "translate("+ (legendWidth-5*legendMargin.left) +","+ (i*35 + 35*1.5) +")"})
     .style("pointer-events", "none");
-    // items.append("line").attr('class', "legend-separator")
-    // .attr("x1", 0)
-    // .attr("x2", legendWidth)
-    // .attr("y1", function(d, i) { return (i*35 + 3*legendMargin.top )})
-    // .attr("y2", function(d, i) { return (i*35 + 3*legendMargin.top )})
-    // // .attr("transform", function(d,i){return "translate(15,"+ (i*20 + 2*legendMargin.top) +")"})
-    // .attr("stroke", "black")
-    // .attr('stroke-width', "1")
-    // .attr("stroke-linecap", "butt")
-
-    
-
-//     var area = d3.svg.area()
-//     .interpolate("basis")
-//     .x(function(d) { return x(d.date); })
-//     .y1(function(d) { return y(d["Thunderbird"]); });
-
-//     svg.append("clipPath")
-//       .attr("id", "clip-above")
-//     .append("path")
-//       .attr("d", area.y0(0));
-
-//   svg.append("path")
-//       .attr("class", "area above")
-//       .attr("clip-path", "url(#clip-above)")
-//       .attr("d", area.y0(function(d) { return y(d["Normal"]); }));
 }
 
 $(document).ready(function() {
