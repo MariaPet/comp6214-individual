@@ -285,7 +285,7 @@ function redrawSVG(dataset) {
 
     //legend
 
-    var legendWidth = 0.25 * window.innerWidth;
+    var legendWidth = 300;
     var legendHeight = 0.8 * window.innerHeight;
     var legendMargin = {
         top: 15,
