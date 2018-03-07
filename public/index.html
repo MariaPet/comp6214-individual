@@ -16,8 +16,53 @@
 <body>
     <header>
         <h1>D3 Visualization</h1>
+        <h2>Visualisation Description</h2>
+        <p> The following bubble chart presents project management information 
+            for the 15 executive departments of the United States administration,
+            between the period of 2006 to 2012.
+        </p>
+        <p>
+            Each bubble in the chart represents a department, labeled by its official 
+            abbreviation. Bubbles are positioned according to their Average Cost Variance 
+            percentage (x-axis), and their Average Schedule Variance percentage (y-axis), 
+            for all the projects they started within the above mentioned period. 
+            According to their positioning each department falls in one of four distinct categories: 
+            <ul>
+                <li>
+                    In Time - In Budget: Departments that on average complete projects ahead of
+                    schedule and within their initial budget.
+                </li>
+                <li>
+                    Late - In Budget: Departments that on average complete projects behind
+                    schedule but within their initial budget.
+                </li>
+                <li>
+                    Late - Out of Budget: Departments that on average complete projects behind
+                    schedule and excede their initial budget.
+                </li>
+                <li>
+                    In Time - Out of Budget: Departments that on average complete projects ahead of
+                    schedule but excede their initial budget.
+                </li>
+            </ul>
+        </p>
+        <p>
+            The area of each bubble is proportioned to the total number of projects carried out
+            by that department, the larger the bubble is the more projects this department had initiated between 2006-2012.
+            The color of each bubble, ranging from light purple to a darker shade,
+            represents the average project cost in millions for each department, the darker a bubble is 
+            the higher their average project cost.
+        </p>
+        <h2>Interactivity</h2>
+        <p>
+            Hovering over a bubble in the chart a tooltip box will appear to the right side of the bubble,
+            containing the following information:
+            <ul>
+                <li>The complete official name of the department</li>
+                <li>The total number of projects it initiated between 2006-2012</li>
+                <li>A color scale, with an animated index</li>
+            </ul>
+        </p>
     </header>
-    <!-- <main> -->
-    <!-- </main> -->
 </body>
 </html>
