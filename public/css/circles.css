@@ -6,6 +6,11 @@
         1px 1px 0 #000;
     pointer-events: none;
 }
+main {
+    position: relative;
+    width: 100%;
+    height: 800px;
+}
 .tooltip {
     color: #fff;
     padding: 10px;

@@ -47,7 +47,7 @@ function redrawSVG(dataset) {
     var borderColour = d3.scaleLinear().domain([minCost, maxCost]).range([d3.rgb("#d580ff"), d3.rgb("#aa00ff"), d3.rgb("#550080")]);
 
     //Tooltip div
-    var tooltip = d3.select("body").append("div")
+    var tooltip = d3.select("main").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
     
@@ -126,7 +126,7 @@ function redrawSVG(dataset) {
         bottom: 30,
         left: 30
     }
-    var svg = d3.select('body').append('svg').attr('width', width + margin.left + margin.right)
+    var svg = d3.select('main').append('svg').attr('width', width + margin.left + margin.right)
     .attr('height', height + margin.top + margin.bottom).append("g")
     .attr('transform', 'translate('+margin.left+','+margin.top+')');
     var x = d3.scaleLinear().domain([-58, 10]).range([0, width]);
@@ -201,7 +201,6 @@ function redrawSVG(dataset) {
         return colour(d["Avg. Project Cost ($ M)"]);
     }).attr("opacity", 0.8)
     .on('mouseover', function(d) {
-        // dS3.select(this.parentNode)
         d3.select(this).attr('r', function(d) {
             return Math.sqrt(d["Projects Number"]/Math.PI) * 5 * 1.2;
         }).attr("opacity", 1);
@@ -209,9 +208,8 @@ function redrawSVG(dataset) {
         tooltip.transition()
             .duration(200)
             .style("opacity", 1);
-        var pointRect = d3.select(this).node().getBoundingClientRect();
-        tooltip.style("left", (pointRect.right) + "px")
-            .style("top", (pointRect.top - 60) + "px")
+        tooltip.style("left", ((+d3.select(this).attr('cx')) +  60)+ "px")
+            .style("top", (+d3.select(this).attr('cy') - 60) + "px")
 
         //transform project cost index
         var dCost = ((maxCost - minCost) - (maxCost - d["Avg. Project Cost ($ M)"])) / (maxCost - minCost);
@@ -220,7 +218,6 @@ function redrawSVG(dataset) {
         d3.select(".cost-value").text((+d["Avg. Project Cost ($ M)"]).toFixed(2))
         d3.select(".tooltip-title").html(d["Agency Name"]);
         d3.select(".project-number").html("Number of projects: " + d["Projects Number"])
-            // .html(d["Agency Name"] + "<br/>Number of Projects: " + d["Projects Number"]);
     })
     .on("mouseout", function(d) {
         d3.select(this).attr('r', function(d) {
@@ -294,7 +291,7 @@ function redrawSVG(dataset) {
         left: 15
     }
 
-    var legendSvg = d3.select('body').append('svg').attr('width', legendWidth + legendMargin.left + legendMargin.right)
+    var legendSvg = d3.select('main').append('svg').attr('width', legendWidth + legendMargin.left + legendMargin.right)
     .attr('height', (dataset.length+1)*35 + legendMargin.top + legendMargin.bottom)
     .attr('transform', 'translate('+legendMargin.left+',0)')
     .append("g")
