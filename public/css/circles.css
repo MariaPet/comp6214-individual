@@ -8,14 +8,13 @@
 }
 main {
     position: relative;
-    width: 100%;
-    height: 800px;
+    padding: 50px;
 }
-.tooltip {
+.point-tooltip {
     color: #fff;
     padding: 10px;
     margin-left: 10px;
-    width: 200px;
+    width: 250px;
     position: absolute;
     pointer-events: none;
     background-color: #5a5151e7;
@@ -26,7 +25,7 @@ main {
     fill: url(#mainGradient);
 }
 
-.tooltip-scale {
+.point-tooltip-scale {
     display: flex;
     align-items: center;
     justify-content: space-around;

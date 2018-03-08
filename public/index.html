@@ -5,104 +5,139 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>D3 Visualisation</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" 
+    crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" media="screen" href="css/index.css" />
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous">
     </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
     <script src="js/d3Init.js"></script>
 </head>
 <body>
-    <header>
+    <header class="container">
         <h1>D3 Visualization</h1>
-        <h2>Description</h2>
-        <p> The following bubble chart presents project management information 
-            for the 15 executive departments of the United States administration,
-            between the period of 2006 to 2012.
-        </p>
-        <p>
-            Each bubble in the chart represents a department, labeled by its official 
-            abbreviation. Departments are positioned according to their Average Cost Variance 
-            percentage (x-axis), and their Average Schedule Variance percentage (y-axis), 
-            for all the projects they started within the above mentioned period. 
-            According to their positioning each department falls in one of four distinct categories: 
-            <ul>
-                <li>
-                    In Time - In Budget: Departments that on average complete projects ahead of
-                    schedule and within their initial budget.
-                </li>
-                <li>
-                    Late - In Budget: Departments that on average complete projects behind
-                    schedule but within their initial budget.
-                </li>
-                <li>
-                    Late - Out of Budget: Departments that on average complete projects behind
-                    schedule and excede their initial budget.
-                </li>
-                <li>
-                    In Time - Out of Budget: Departments that on average complete projects ahead of
-                    schedule but excede their initial budget.
-                </li>
-            </ul>
-        </p>
-        <p>
-            The area of each bubble is proportioned to the total number of projects carried out
-            by that department. The larger the bubble is the more projects this department had initiated between 2006-2012.
-            The color of each bubble, ranging from light purple to a darker shade,
-            represents the average project cost in millions for each department. The darker a bubble is 
-            the higher their average project cost.
-        </p>
-        <p>
-            The legend, on the side of the chart, contains a list of all the departments in the visualisation.
-            On the left of the department's name there is a small circle colored as the corresponding bubble 
-            in the chart. On the right side of the department's name there is the number of initiated
-            projects, on top of a blue bar that visualises this number. The departments in the legend
-            appear in ascending order according the their total number of projects.
-        </p>
-        <h2>Interactivity</h2>
-        <p>
-            Hovering with the mouse over a bubble in the chart, will cause the bubble to grow in size and to turn opaque. 
-            A tooltip box will appear to the right side of the bubble, containing the following information:
-            <ul>
-                <li>The complete official name of the department</li>
-                <li>The total number of projects it initiated between 2006-2012</li>
-                <li>
-                    A color scale, with an animated index, which indicates
-                    the average project cost of that particular department in million dollars, and
-                    how that relates to the lowest and highest average project cost among all 
-                    other departments.
-                </li>
-            </ul>
-        </p>
-        <p>
-            Hovering over the items in the legend, makes them to highlight, while the corresponding
-            bubble in the chart grows in size and turns opaque.
-        </p>
-        <h2>Audience</h2>
-        <p>
-            This visualisation is intended for the United States administration, and aims to help them
-            identify the executive departments that on average excede their initial schedule and budget
-            when carrying out a project. Based on the results of the current analysis and visualisation,
-            emerges the need for a more focused analysis that will investigate the reasons behind the 
-            innefieciency of particular departments.
-        </p>
-        <p>
-            Information on the average project cost and number of projects per departent, that are also presented
-            in the visualisation, are useful in order to help the administration decide in which of the innefficient 
-            departments the problem is more urgent. 
-        </p>
-        <p>   
-            For example, the Department of Defense, is positioned close to the 
-            Department of Education, in the "Late &amp; Out of Budget" quarter of the graph, however the issue is
-            significantly more serious in the Department of Defense, since on average each project costs 20.26
-            million dollars, with a total number of 66 projects, whereas in the Department of Education the average 
-            project cost is only 1.63 millions, with a total number of 26 projects. Arguably, it is more urgent 
-            to tackle the innefieciency in the Department of Defense because it introduces higher absolute costs. 
-        </p>
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Description</a>
+                    </h2>
+                </div>
+                <div id="collapse1" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <p> The following bubble chart presents project management information 
+                            for the 15 executive departments of the United States administration,
+                            between the period of 2006 to 2012.
+                        </p>
+                        <p>
+                            Each bubble in the chart represents a department, labeled by its official 
+                            abbreviation. Departments are positioned according to their Average Cost Variance 
+                            percentage (x-axis), and their Average Schedule Variance percentage (y-axis), 
+                            for all the projects they started within the above mentioned period. 
+                            According to their positioning each department falls in one of four distinct categories: 
+                            <ul>
+                                <li>
+                                    In Time - In Budget: Departments that on average complete projects ahead of
+                                    schedule and within their initial budget.
+                                </li>
+                                <li>
+                                    Late - In Budget: Departments that on average complete projects behind
+                                    schedule but within their initial budget.
+                                </li>
+                                <li>
+                                    Late - Out of Budget: Departments that on average complete projects behind
+                                    schedule and excede their initial budget.
+                                </li>
+                                <li>
+                                    In Time - Out of Budget: Departments that on average complete projects ahead of
+                                    schedule but excede their initial budget.
+                                </li>
+                            </ul>
+                        </p>
+                        <p>
+                            The area of each bubble is proportioned to the total number of projects carried out
+                            by that department. The larger the bubble is the more projects this department had initiated between 2006-2012.
+                            The color of each bubble, ranging from light purple to a darker shade,
+                            represents the average project cost in millions for each department. The darker a bubble is 
+                            the higher their average project cost.
+                        </p>
+                        <p>
+                            The legend, on the side of the chart, contains a list of all the departments in the visualisation.
+                            On the left of the department's name there is a small circle colored as the corresponding bubble 
+                            in the chart. On the right side of the department's name there is the number of initiated
+                            projects, on top of a blue bar that visualises this number. The departments in the legend
+                            appear in ascending order according the their total number of projects.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Interactivity</a>
+                    </h2>
+                </div>
+                <div id="collapse2" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <p>
+                            Hovering with the mouse over a bubble in the chart, will cause the bubble to grow in size and to turn opaque. 
+                            A tooltip box will appear to the right side of the bubble, containing the following information:
+                            <ul>
+                                <li>The complete official name of the department</li>
+                                <li>The total number of projects it initiated between 2006-2012</li>
+                                <li>
+                                    A color scale, with an animated index, which indicates
+                                    the average project cost of that particular department in million dollars, and
+                                    how that relates to the lowest and highest average project cost among all 
+                                    other departments.
+                                </li>
+                            </ul>
+                        </p>
+                        <p>
+                            Hovering over the items in the legend, makes them to highlight, while the corresponding
+                            bubble in the chart grows in size and turns opaque.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Audience</a>
+                    </h2>
+                </div>
+                <div id="collapse3" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <p>
+                            This visualisation is intended for the United States administration, and aims to help them
+                            identify the executive departments that on average excede their initial schedule and budget
+                            when carrying out a project. Based on the results of the current analysis and visualisation,
+                            emerges the need for a more focused analysis that will investigate the reasons behind the 
+                            innefieciency of particular departments.
+                        </p>
+                        <p>
+                            Information on the average project cost and number of projects per departent, that are also presented
+                            in the visualisation, are useful in order to help the administration decide in which of the innefficient 
+                            departments the problem is more urgent. 
+                        </p>
+                        <p>   
+                            For example, the Department of Defense, is positioned close to the 
+                            Department of Education, in the "Late &amp; Out of Budget" quarter of the graph, however the issue is
+                            significantly more serious in the Department of Defense, since on average each project costs 20.26
+                            million dollars, with a total number of 66 projects, whereas in the Department of Education the average 
+                            project cost is only 1.63 millions, with a total number of 26 projects. Arguably, it is more urgent 
+                            to tackle the innefieciency in the Department of Defense because it introduces higher absolute costs. 
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </header>
     <main>
-        
     </main>
 </body>
 </html>

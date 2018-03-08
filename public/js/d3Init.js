@@ -13,7 +13,7 @@ function wrap(text, width) {
             tspan = text.text(null).append('tspan').attr("x", x).attr("y", y).attr("dy", dy + "em");
         while(word = words.pop()) {
             line.push(word);
-            tspan.text(line.join(""));
+            tspan.text(line.join(" "));
             if (tspan.node().getComputedTextLength() > width) {
                 line.pop();
                 tspan.text(line.join(" "));
@@ -34,7 +34,7 @@ function redrawSVG(dataset) {
     //avgLifecycleCost: data["Avg. Lifecycle Cost ($ M)"]
 
     d3.selectAll("svg").remove();
-    d3.select(".tooltip").remove();
+    d3.select(".point-tooltip").remove();
 
     var tooltipScaleWidth = 120;
     var tooltipScaleHeight = 20;
@@ -43,82 +43,11 @@ function redrawSVG(dataset) {
     var minCost = d3.min(dataset, function(d) { return +d["Avg. Project Cost ($ M)"]; } );
     var maxProject = d3.max(dataset, function(d) { return +d["Projects Number"]; } );
     var minProject = d3.min(dataset, function(d) { return +d["Projects Number"]; } );
-    var colour = d3.scaleLinear().domain([minCost, maxCost]).range([d3.rgb("#dd99ff"), d3.rgb("#b31aff"), d3.rgb("#660099")]);
-    var borderColour = d3.scaleLinear().domain([minCost, maxCost]).range([d3.rgb("#d580ff"), d3.rgb("#aa00ff"), d3.rgb("#550080")]);
-
-    //Tooltip div
-    var tooltip = d3.select("main").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
-    
-    tooltip.append("h3").attr("class", "tooltip-title")
-    tooltip.append("p").attr("class", "project-number");
-    tooltip.append("p").html("Average project cost in million dollars ($), compared to the other departments:");
-    var tooltipScale = tooltip.append("div").attr("class", "tooltip-scale")
-    tooltipScale.append('span').attr('id', 'min-cost').html(parseFloat(minCost).toFixed(2));
-    
-    var tooltipSvg = tooltipScale.append('svg').attr('class', 'tooltip-metrics')
-    .attr('width', (tooltipScaleWidth + 2*tooltipPadding)).attr('height', (tooltipScaleHeight + 2*tooltipPadding))
-    .attr('transform', 'translate('+tooltipPadding+',0)');
-
-    var svgDefs = tooltipSvg.append('defs');
-    var mainGradient = svgDefs.append('linearGradient')
-                .attr('id', 'mainGradient');
-
-    // Create the stops of the main gradient. Each stop will be assigned
-    // a class to style the stop using CSS.
-    mainGradient.append('stop')
-        .attr('offset', '0')
-        .attr('stop-color', "#dd99ff");
-    mainGradient.append('stop')
-        .attr('offset', '0.5')
-        .attr('stop-color', "#b31aff");
-    mainGradient.append('stop')
-        .attr('offset', '1')
-        .attr('stop-color', "#660099");
-    
-    // Use the gradient to set the shape fill, via CSS.
-    tooltipSvg.append('rect')
-        .classed('filled', true)
-        .attr('x', tooltipPadding)
-        .attr('y', tooltipPadding)
-        .attr('width', tooltipScaleWidth)
-        .attr('height', tooltipScaleHeight);
+    var colour = d3.scaleLinear().domain([minCost, maxCost]).range([d3.rgb("#e6b3ff"), d3.rgb("#b31aff"), d3.rgb("#550080")]);
+    var borderColour = d3.scaleLinear().domain([minCost, maxCost]).range([d3.rgb("#dd99ff"), d3.rgb("#aa00ff"), d3.rgb("#440066")]);
 
     
-    var costIndexGroup = tooltipSvg.append('g').attr('id', 'cost-index')    
-
-    costIndexGroup.append('rect')
-        .attr('x', tooltipPadding)
-        .attr('y', 0)
-        .attr('width', 3)
-        .attr('height', (tooltipScaleHeight + 2*tooltipPadding))
-        .attr('fill', 'black')
-
-    
-    costIndexGroup.append('rect')
-    .attr("class", "cost-value-bg")
-    .attr('x', 0)
-    .attr("y", (tooltipScaleHeight + 2*tooltipPadding)/2)
-    .attr('width', 30)
-    .attr('height', 15)
-    .attr('transform', 'translate('+(-2*tooltipPadding)+', '+(-1.5*tooltipPadding)+')')
-    .attr("fill", "black")
-    .attr("opacity", "0.5")
-    // .attr("dominant-baseline", "central")
-    
-    costIndexGroup.append('text').text('test')
-    .attr("x", tooltipPadding)
-    .attr("y", (tooltipScaleHeight + 2*tooltipPadding)/2)
-    .attr("dominant-baseline", "central")
-    .attr("text-anchor", "middle")
-    .attr("fill", "#fff")
-    .attr("font-size", "12")
-    .attr("class", "cost-value");
-
-    tooltipScale.append('span').attr('id', 'max-cost').html(parseFloat(maxCost).toFixed(2));;
-    
-    var width = 0.65 * window.innerWidth;
+    var width = 0.6*window.innerWidth >=400? 0.6*window.innerWidth: 400;
     var height = 600;
     var margin = {
         top: 30,
@@ -126,9 +55,23 @@ function redrawSVG(dataset) {
         bottom: 30,
         left: 30
     }
-    var svg = d3.select('main').append('svg').attr('width', width + margin.left + margin.right)
-    .attr('height', height + margin.top + margin.bottom).append("g")
-    .attr('transform', 'translate('+margin.left+','+margin.top+')');
+    var legendWidth = 0.15*window.innerWidth >= 300? 0.15*window.innerWidth: 300;
+    var legendHeight = 600;
+    var legendMargin = {
+        top: 15,
+        right: 15,
+        bottom: 15,
+        left: 15
+    }
+
+    var svgParent = d3.select('main').append('svg')
+    .attr('width', width + legendWidth + margin.left + margin.right + legendMargin.left + legendMargin.right)
+    .attr('height', height + margin.top + margin.bottom)
+
+    var svg = svgParent
+    .append("g")
+    .attr('width', width + margin.right)
+    .attr('transform', 'translate('+margin.left+','+margin.top+')')
     var x = d3.scaleLinear().domain([-58, 10]).range([0, width]);
     var y = d3.scaleLinear().domain([-50, 15]).range([height, 0]);
     
@@ -138,7 +81,7 @@ function redrawSVG(dataset) {
     
     svg.append("text")
     .attr('class', 'x-axis-label')            
-    .attr("transform", "translate(" + x(0) + " ," + -10 + ")")
+    .attr("transform", "translate("+ (width + margin.left/2) + "," + y(0) + ")rotate(90)")
     .style("text-anchor", "middle")
     .text("Avg. Scedule Variance(%)");
 
@@ -146,31 +89,39 @@ function redrawSVG(dataset) {
 
     svg.append("text")
     .attr('class', 'y-axis-label')             
-    .attr("transform", "translate("+ (width + margin.left/2) + "," + y(0) + ")rotate(90)")
+    .attr("transform", "translate(" + x(0) + " ," + -10 + ")")
     .style("text-anchor", "middle")
     .text("Avg. Cost Variance(%)");
 
     svg.append("text").text("In Time & In Budget")
+    .attr('id', 'in-time-in-budget')
     .attr('class','quarter-label')
     .attr('x', (x(0) + x(10))/2)
     .attr('y', (y(0) + y(20))/2)
+    .attr("font-size", "12")
+
+    svg.append("text").text("Out of Time & In Budget")
+    .attr('id', 'out-time-in-budget')
+    .attr('class','quarter-label')
+    .attr('x', (x(0) + x(-20))/2)
+    .attr('y', (y(0) + y(20))/2)
+    .attr("font-size", "12")
 
     svg.append("text").text("In Time & Out of Budget")
-    .attr('class','quarter-label')
-    .attr('x', (x(0) + x(-15))/2)
-    .attr('y', (y(0) + y(20))/2)
-
-    svg.append("text").text("Late & In Budget")
+    .attr('id', 'in-time-out-budget')
     .attr('class','quarter-label')
     .attr('x', (x(0) + x(10))/2)
     .attr('y', (y(0) + y(-20))/2)
+    .attr("font-size", "12")
 
     svg.append("text").text("Late & Out of Budget")
+    .attr('id', 'out-time-out-budget')
     .attr('class','quarter-label')
-    .attr('x', (x(0) + x(-15))/2)
-    .attr('y', (y(0) + y(-20))/2)   
+    .attr('x', (x(0) + x(-20))/2)
+    .attr('y', (y(0) + y(-20))/2)
+    .attr("font-size", "12")   
 
-    svg.selectAll(".quarter-label").call(wrap, 80)
+    svg.selectAll(".quarter-label").call(wrap, 50)
 
     //Data drawing
     var point = svg.selectAll(".point").data(dataset).enter().append("g");
@@ -204,19 +155,19 @@ function redrawSVG(dataset) {
         d3.select(this).attr('r', function(d) {
             return Math.sqrt(d["Projects Number"]/Math.PI) * 5 * 1.2;
         }).attr("opacity", 1);
-        tooltip.moveToFront();
+        // tooltip.moveToFront();
         tooltip.transition()
             .duration(200)
             .style("opacity", 1);
-        tooltip.style("left", ((+d3.select(this).attr('cx')) +  60)+ "px")
-            .style("top", (+d3.select(this).attr('cy') - 60) + "px")
+        tooltip.style("left", ((+d3.select(this).attr('cx')) +  100)+ "px")
+            .style("top", (+d3.select(this).attr('cy') - 100) + "px")
 
         //transform project cost index
         var dCost = ((maxCost - minCost) - (maxCost - d["Avg. Project Cost ($ M)"])) / (maxCost - minCost);
-        var indexTransform = (tooltipScaleWidth * dCost);
+        var indexTransform = (dCost ? (dCost === 1? (tooltipScaleWidth - 1.3*tooltipPadding): tooltipScaleWidth*dCost): 1.3*tooltipPadding);
         d3.select("#cost-index").attr('transform', 'translate('+indexTransform+',0)');
         d3.select(".cost-value").text((+d["Avg. Project Cost ($ M)"]).toFixed(2))
-        d3.select(".tooltip-title").html(d["Agency Name"]);
+        d3.select(".point-tooltip-title").html(d["Agency Name"]);
         d3.select(".project-number").html("Number of projects: " + d["Projects Number"])
     })
     .on("mouseout", function(d) {
@@ -260,7 +211,6 @@ function redrawSVG(dataset) {
             case "Department of Education":
             return "ED";
             case "Department of Energy":
-            console.log(d["Avg. Project Cost ($ M)"])
             return "DOE";
             default:
             return d["Agency Name"];
@@ -282,19 +232,14 @@ function redrawSVG(dataset) {
 
     //legend
 
-    var legendWidth = 300;
-    var legendHeight = 0.8 * window.innerHeight;
-    var legendMargin = {
-        top: 15,
-        right: 15,
-        bottom: 15,
-        left: 15
-    }
-
-    var legendSvg = d3.select('main').append('svg').attr('width', legendWidth + legendMargin.left + legendMargin.right)
+    // var legendSvg = d3.select('main').append('svg')
+    // .attr('width', legendWidth + legendMargin.left + legendMargin.right)
+    // .attr('height', (dataset.length+1)*35 + legendMargin.top + legendMargin.bottom)
+    // .attr('transform', 'translate('+legendMargin.left+',0)')
+    var legendSvg = svgParent.append("g")
+    .attr('transform',  'translate('+(width + margin.left + margin.right + legendMargin.right)+','+margin.top+')')
+    .attr('width', legendWidth)
     .attr('height', (dataset.length+1)*35 + legendMargin.top + legendMargin.bottom)
-    .attr('transform', 'translate('+legendMargin.left+',0)')
-    .append("g")
     
     
     legendSvg.append("rect")
@@ -312,15 +257,44 @@ function redrawSVG(dataset) {
     .attr('y', 35/2)
     .attr('x', legendMargin.left)
 
+    legendSvg.append("text").text("Sort by avg. project cost")
+    .attr("text-anchor", "left")
+    .style("font", "bold 10px sans-serif")
+    .attr("text-decoration", "underline")
+    .attr('y', 35/2)
+    .attr("transform", "translate("+ (legendWidth-9*legendMargin.left) +",0)")
+    .style("cursor", "pointer")
+    .on("click", function() {
+        var current = d3.select(this).text();
+        var transition = legendSvg.transition().duration(750),
+        delay = function(d, i) { return i * 50; };
+        if (current === "Sort by avg. project cost") {
+            d3.select(this).text("Sort by total projects");
+            legendSvg.selectAll(".legendItem")
+            .sort(function(a, b){return a["Avg. Project Cost ($ M)"] - b["Avg. Project Cost ($ M)"]})
+            transition.selectAll(".legendItem").delay(delay)
+            .attr("transform",function(d, i) { return ("translate(0," +(i*35 + 35)+")" )})
+
+        }
+        else {
+            d3.select(this).text("Sort by avg. project cost");
+            legendSvg.selectAll(".legendItem")
+            .sort(function(a, b){return a["Projects Number"] - b["Projects Number"]})
+            transition.selectAll(".legendItem").delay(delay)
+            .attr("transform",function(d, i) { return ("translate(0," +(i*35 + 35)+")" )})
+        }
+    })
+
     var items = legendSvg.selectAll(".legendItem")
     .data(dataset.sort(function(a, b){return a["Projects Number"] - b["Projects Number"]}))
     .enter().append("g")
     .attr("class","legendItem")
+    .attr("transform",function(d, i) { return ("translate(0," +(i*35 + 35)+")" )})
+    
 
     items.append("rect").attr('class', "legend-separator")
     .attr("x", 0)
     .attr("width", legendWidth)
-    .attr("y", function(d, i) { return (i*35 + 35 )})
     .attr("height", 35)
     .attr("fill", d3.rgb("#e0e0eb"))
     .attr("stroke", "black")
@@ -331,11 +305,22 @@ function redrawSVG(dataset) {
         points.each(function(point, i) {
             if (point["Agency Name"] === d["Agency Name"]) {
                 d3.select(this).attr('r', function(d) {
-                    return Math.sqrt(d["Projects Number"]/Math.PI) * 5 * 1.2;
+                    return Math.sqrt(d["Projects Number"]/Math.PI) * 5 * 1.5;
                 }).attr("opacity", 1);
             }
         })
-        
+        if (d["Avg. Scedule Variance(%)"] >=0 && d["Avg. Cost Variance(%)"] >=0) {
+            d3.select('#in-time-in-budget').style("font-weight", "bold").style("font-size", "15px")
+        }
+        else if(d["Avg. Scedule Variance(%)"] < 0 && d["Avg. Cost Variance(%)"] >=0) {
+            d3.select('#out-time-in-budget').style("font-weight", "bold").style("font-size", "15px")
+        }
+        else if(d["Avg. Scedule Variance(%)"] < 0 && d["Avg. Cost Variance(%)"] < 0) {
+            d3.select('#out-time-out-budget').style("font-weight", "bold").style("font-size", "15px")
+        }
+        else if(d["Avg. Scedule Variance(%)"] >=0 && d["Avg. Cost Variance(%)"] <0){
+            d3.select('#in-time-out-budget').style("font-weight", "bold").style("font-size", "15px")
+        }
     })
     .on("mouseout", function(d) {
         d3.select(this).attr("fill", d3.rgb("#e0e0eb"));
@@ -347,6 +332,7 @@ function redrawSVG(dataset) {
                 }).attr("opacity", 0.7);
             }
         })
+        d3.selectAll(".quarter-label").style("font-weight", "normal").style("font-size", "12px")
     });
 
     items.append('rect')
@@ -356,7 +342,6 @@ function redrawSVG(dataset) {
     })
     .attr("height", 35)
     .attr("fill", d3.rgb("#003399"))
-    .attr("y", function(d, i) { return (i*35 + 35 )})
     .attr("x", function(d) {
         var dProject = ((maxProject - minProject) - (maxProject - d["Projects Number"])) / (maxProject - minProject);
         return legendWidth - (legendWidth * dProject || 5);
@@ -369,25 +354,98 @@ function redrawSVG(dataset) {
     .attr("fill", function(d) {
         return colour(d["Avg. Project Cost ($ M)"]);
     })
-    .attr("transform", function(d,i){return "translate("+ legendMargin.left +","+ (i*35 + 35*1.5) +")"})
+    .attr("transform", "translate("+ legendMargin.left +","+ (35*0.5) +")")
     .style("pointer-events", "none");
 
     items.append("text")
     .datum(function(d) {return {name: d["Agency Name"].replace('Department of ','')};})
     .text(function(d) { return d.name; })
-    .style("font", "10px sans-serif")
+    .style("font", "11px sans-serif")
     .attr("text-anchor", "right")
     .attr("alignment-baseline", "middle")
-    .attr("transform", function(d,i){return "translate("+ 2*legendMargin.left +","+ (i*35 + 35*1.5) +")"})
+    .attr("transform", "translate("+ 2*legendMargin.left +","+ ( 35*0.5) +")")
     .style("pointer-events", "none");
 
     items.append("text")
     .text(function(d) { return d["Projects Number"] + " projects"; })
-    .style("font", "10px sans-serif")
+    .style("font", "11px sans-serif")
     .attr("text-anchor", "left")
     .attr("alignment-baseline", "middle")
-    .attr("transform", function(d,i){return "translate("+ (legendWidth-5*legendMargin.left) +","+ (i*35 + 35*1.5) +")"})
+    .attr("transform", function(d,i){return "translate("+ (legendWidth-5*legendMargin.left) +","+ (35*0.5) +")"})
     .style("pointer-events", "none");
+
+    //Tooltip div
+    var tooltip = d3.select("main").append("div")
+    .attr("class", "point-tooltip")
+    .style("opacity", 0);
+    
+    tooltip.append("h3").attr("class", "point-tooltip-title")
+    tooltip.append("p").attr("class", "project-number");
+    tooltip.append("p").html("Average project cost in million dollars ($), compared to the other departments:");
+    var tooltipScale = tooltip.append("div").attr("class", "point-tooltip-scale")
+    tooltipScale.append('span').attr('id', 'min-cost').html(parseFloat(minCost).toFixed(2));
+    
+    var tooltipSvg = tooltipScale.append('svg').attr('class', 'point-tooltip-metrics')
+    .attr('width', (tooltipScaleWidth + 2*tooltipPadding)).attr('height', (tooltipScaleHeight + 2*tooltipPadding))
+    
+
+    var svgDefs = tooltipSvg.append('defs');
+    var mainGradient = svgDefs.append('linearGradient')
+                .attr('id', 'mainGradient');
+
+    // Create the stops of the main gradient. Each stop will be assigned
+    // a class to style the stop using CSS.
+    mainGradient.append('stop')
+        .attr('offset', '0')
+        .attr('stop-color', "#e6b3ff");
+    mainGradient.append('stop')
+        .attr('offset', '0.5')
+        .attr('stop-color', "#b31aff");
+    mainGradient.append('stop')
+        .attr('offset', '1')
+        .attr('stop-color', "#550080");
+    
+    // Use the gradient to set the shape fill, via CSS.
+    tooltipSvg.append('rect')
+        .classed('filled', true)
+        .attr('x', tooltipPadding)
+        .attr('y', tooltipPadding)
+        .attr('width', tooltipScaleWidth)
+        .attr('height', tooltipScaleHeight);
+        
+    
+    var costIndexGroup = tooltipSvg.append('g').attr('id', 'cost-index'); 
+
+    costIndexGroup.append('rect')
+        .attr('x', tooltipPadding)
+        .attr('y', 0)
+        .attr('width', 3)
+        .attr('height', (tooltipScaleHeight + 2*tooltipPadding))
+        .attr('fill', 'black')
+
+    
+    costIndexGroup.append('rect')
+    .attr("class", "cost-value-bg")
+    .attr('x', 0)
+    .attr("y", (tooltipScaleHeight + 2*tooltipPadding)/2)
+    .attr('width', 30)
+    .attr('height', 15)
+    .attr('transform', 'translate('+(-2*tooltipPadding)+', '+(-1.5*tooltipPadding)+')')
+    .attr("fill", "black")
+    .attr("opacity", "0.5")
+    // .attr("dominant-baseline", "central")
+    
+    costIndexGroup.append('text').text('test')
+    .attr("x", tooltipPadding)
+    .attr("y", (tooltipScaleHeight + 2*tooltipPadding)/2)
+    .attr("dominant-baseline", "central")
+    .attr("text-anchor", "middle")
+    .attr("fill", "#fff")
+    .attr("font-size", "12")
+    .attr("class", "cost-value");
+
+    tooltipScale.append('span').attr('id', 'max-cost').html(parseFloat(maxCost).toFixed(2));
+
 }
 
 $(document).ready(function() {
