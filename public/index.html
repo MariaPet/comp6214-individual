@@ -19,7 +19,9 @@
 </head>
 <body>
     <header class="container">
-        <h1>D3 Visualization</h1>
+        <h1>Visualisation of U.S Departments Project Management Metrics</h1>
+        <h4>by Maria Petriti</h4>
+        <span>*This analysis is part of a coursework, and the dataset used does not contain accurate data</span>
         <div class="panel-group" id="accordion">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -29,14 +31,14 @@
                 </div>
                 <div id="collapse1" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <p> The following bubble chart presents project management information 
-                            for the 15 executive departments of the United States administration,
-                            between the period of 2006 to 2012.
+                        <p> The following bubble chart was created with the use of the d3.js Javascript library and
+                            presents project management information for the 15 executive departments of 
+                            the United States administration, between the period of 2006 to 2012.
                         </p>
                         <p>
                             Each bubble in the chart represents a department, labeled by its official 
-                            abbreviation. Departments are positioned according to their Average Cost Variance 
-                            percentage (x-axis), and their Average Schedule Variance percentage (y-axis), 
+                            abbreviation. Departments are positioned according to their Average Schedule Variance 
+                            percentage (x-axis), and their Average Cost Variance percentage (y-axis), 
                             for all the projects they started within the above mentioned period. 
                             According to their positioning each department falls in one of four distinct categories: 
                             <ul>
@@ -99,7 +101,14 @@
                         </p>
                         <p>
                             Hovering over the items in the legend, makes them to highlight, while the corresponding
-                            bubble in the chart grows in size and turns opaque.
+                            bubble in the chart grows in size and turns opaque. The category label of the chart quarter in which 
+                            the bubble is positioned, turns bold and its font-size grows, in order to highlight
+                            the category in which the departent falls in.
+                        </p>
+                        <p>
+                            At the top right corner of the legend there is the option to sort
+                            the departments in ascending order based on the average project cost, by
+                            clicking on it. 
                         </p>
                     </div>
                 </div>
@@ -117,11 +126,11 @@
                             identify the executive departments that on average excede their initial schedule and budget
                             when carrying out a project. Based on the results of the current analysis and visualisation,
                             emerges the need for a more focused analysis that will investigate the reasons behind the 
-                            innefieciency of particular departments.
+                            inefficiency of particular departments.
                         </p>
                         <p>
-                            Information on the average project cost and number of projects per departent, that are also presented
-                            in the visualisation, are useful in order to help the administration decide in which of the innefficient 
+                            Information on the average project cost and number of projects per department, that are also presented
+                            in the visualisation, are useful in order to help the administration decide in which of the inefficient 
                             departments the problem is more urgent. 
                         </p>
                         <p>   
@@ -130,7 +139,7 @@
                             significantly more serious in the Department of Defense, since on average each project costs 20.26
                             million dollars, with a total number of 66 projects, whereas in the Department of Education the average 
                             project cost is only 1.63 millions, with a total number of 26 projects. Arguably, it is more urgent 
-                            to tackle the innefieciency in the Department of Defense because it introduces higher absolute costs. 
+                            to tackle the inefficiency in the Department of Defense because it introduces higher absolute costs. 
                         </p>
                     </div>
                 </div>
