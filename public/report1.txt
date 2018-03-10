@@ -1,0 +1,10 @@
+COMP6214 Open Data Innovation Coursework 1
+Maria Petriti
+mp2n17
+
+The visualisaion code is contained in the "public" folder of the submission.
+To host a copy of it, the contents of the "public" folder (index.html, js folder, css folder)
+must be copied in a directory accessible through the web, such as the public_html
+directory of the ECS web space. 
+
+
