@@ -10,10 +10,10 @@ directory of the ECS web space.
 
 
 An overview of the audience and use case of the visualisation can be
-found at http://students.ecs.soton.ac.uk/mp2n17#audience 
+found at the "Audience" panel in http://students.ecs.soton.ac.uk/mp2n17
 
 A description of the interactivity of the visualisation can be found 
-at http://students.ecs.soton.ac.uk/mp2n17#audience
+at the "Interactivity" panel in http://students.ecs.soton.ac.uk/mp2n17
 
 The manipulation and aggregation of the data was conducted in a PostgreSQL
 database. Bellow is the query that I ran to create a view with the data that
