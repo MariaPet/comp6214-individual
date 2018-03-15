@@ -1,3 +1,5 @@
+// Adapted from the code found at
+// https://stackoverflow.com/questions/16701522/how-to-linebreak-an-svg-text-within-javascript
 function wrap(text, width) {
     text.each(function() {
         var text = d3.select(this),
