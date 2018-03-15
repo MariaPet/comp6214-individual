@@ -26,10 +26,10 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h2 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Description</a>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#description">Description</a>
                     </h2>
                 </div>
-                <div id="collapse1" class="panel-collapse collapse in">
+                <div id="description" class="panel-collapse collapse in">
                     <div class="panel-body">
                         <p> The following bubble chart was created with the use of the d3.js Javascript library and
                             presents project management information for the 15 executive departments of 
@@ -63,6 +63,11 @@
                         <p>
                             The area of each bubble is proportioned to the total number of projects carried out
                             by that department. The larger the bubble is the more projects this department had initiated between 2006-2012.
+                            The radius of each bubble is calculated with this formula 
+                            <span style="font-family: monospace">`Math.sqrt(d["Projects Number"]/Math.PI) * 5;`</span> 
+                            (it is multiplied by 5, to collectively increase the bubble size for each department)
+                        </p>
+                        <p>
                             The color of each bubble, ranging from light purple to a darker shade,
                             represents the average project cost in millions for each department. The darker a bubble is 
                             the higher their average project cost.
@@ -80,10 +85,10 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h2 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Interactivity</a>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#interactivity">Interactivity</a>
                     </h2>
                 </div>
-                <div id="collapse2" class="panel-collapse collapse">
+                <div id="interactivity" class="panel-collapse collapse">
                     <div class="panel-body">
                         <p>
                             Hovering with the mouse over a bubble in the chart, will cause the bubble to grow in size and to turn opaque. 
@@ -100,15 +105,23 @@
                             </ul>
                         </p>
                         <p>
+                            This tooltip box contains information related to a department that are not very clear on
+                            the chart, such as the full department name and the actual amounts of projects and average
+                            project cost.
+                        </p>
+                        <p>
                             Hovering over the items in the legend, makes them to highlight, while the corresponding
                             bubble in the chart grows in size and turns opaque. The category label of the chart quarter in which 
                             the bubble is positioned, turns bold and its font-size grows, in order to highlight
-                            the category in which the departent falls in.
+                            the category in which the department falls in. This interaction aims to allow users easily
+                            identify a particular department they are interested in on the chart, just by looking at the legend. 
                         </p>
                         <p>
                             At the top right corner of the legend there is the option to sort
                             the departments in ascending order based on the average project cost, by
-                            clicking on it. 
+                            clicking on it. Sorting the items in the legend is a convenient way to manage the data by exception.
+                            For example, it's easier to identify where are positioned in the chart the departments with the highest 
+                            average project cost.
                         </p>
                     </div>
                 </div>
@@ -116,15 +129,21 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h2 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Audience</a>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#audience">Audience</a>
                     </h2>
                 </div>
-                <div id="collapse3" class="panel-collapse collapse">
+                <div id="audience" class="panel-collapse collapse">
                     <div class="panel-body">
                         <p>
                             This visualisation is intended for the United States administration, and aims to help them
                             identify the executive departments that on average excede their initial schedule and budget
-                            when carrying out a project. Based on the results of the current analysis and visualisation,
+                            when carrying out a project. The decision to render the data in a bubble chart was taken
+                            beacuse it is a clear way to display the distribution of the different departments, in the four 
+                            possible categories that are defined by the x and y axis. A bubble chart is also a convenient way
+                            to include extra information by differenciating the size and the colour of each bubble.
+                        </p>
+                        <p> 
+                            Based on the results of the current analysis and visualisation,
                             emerges the need for a more focused analysis that will investigate the reasons behind the 
                             inefficiency of particular departments.
                         </p>

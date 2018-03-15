@@ -1,63 +1,38 @@
 COMP6214 Open Data Innovation Coursework 1
 Maria Petriti
 mp2n17
+http://students.ecs.soton.ac.uk/mp2n17
 
-For the first part of this coursework, Open Refine was used for 
-the cleaning of the dataset. During the cleaning the following 
-5 types of erros were identified and fixed:
+The visualisation code is contained in the "public" folder of the submission.
+To host a copy of it, the contents of the "public" folder (index.html, js folder, css folder)
+must be copied in a directory accessible through the web, such as the public_html
+directory of the ECS web space. 
 
-1) Multiple representations of the same data
 
-In the "Agency Name" column there were multiple representations for
-a single agency. For example sometimes the same agency was mentioned by
-its full name and in other cases just by its abbreviation. 
+An overview of the audience and use case of the visualisation can be
+found at http://students.ecs.soton.ac.uk/mp2n17#audience 
 
-To fix this inconsistency I applied the text facet on the "Agency Name"
-and the "Agency Code" column. Then I tried to cluster together the 
-agency names to identify potential multiple representations. Some of the 
-multiple reprseantations could not be spotted by the clustering tool, so I filtered
-by "Agency Code" as well and manually changed the remaining different name
-instancies of a single agency to its full name.
+A description of the interactivity of the visualisation can be found 
+at http://students.ecs.soton.ac.uk/mp2n17#audience
 
-2) Duplicate lines
+The manipulation and aggregation of the data was conducted in a PostgreSQL
+database. Bellow is the query that I ran to create a view with the data that
+were used in the visualisation:
 
-The following pairs of records were duplicates: 2300-2301, 
-499-500, 1004-1005 and 1743-1744. 
-
-To locate the issue with duplicate records I applied text facets
-on the "Unique Investment Identifier", the "Project ID", and the 
-"Agency Project ID" columns, and I sorted the values by count. By investigating the 
-values that had a count more than one I was able to identify potential 
-duplicates and flag them. I compared the flagged records and deleted 
-the duplicates.
-
-3) Mixed use of numeric scales
-
-I discovered that in the "Lifecycle Cost" column, that contains values 
-in millions of dollars, some of the values were expressed as decimal numbers
-while some others as text with the the indication of " ($m)" next to the actual 
-numeric value.
-
-To fix this error I editted the cells of the column by applying two transformations.
-At first, I searched by a custom text facet with the regex \(\$m\) for the number of results
-that matched it, to make sure it was equal to the non numeric values of the column. 
-Then removed the extra " ($m)" by running the following command replace(value, " ($m)", "").
-Finally I transformed all the values of the column to numeric values.
-
-4) Inconsistent formats of dates
-
-At the "Completion Date (B1)" column it was easy to spot that the value of
-the first record was in a different date format than the rest.
-
-To identify all occurencies of date formats such as the one in the first record
-I applied a custom text facet to that column, using a regular expression like this
-isNotNull(value.match(/\d{4}-\d{2}-\d{2}/)). Then, I manually changed all the matching 
-records to the desired data format. To make sure that all the values in this column conformed
-with the selected format, I applied the custom text facet isNotNull(value.match(/\d{2}\/\d{2}\/\d{4}/))
-to check the number of matched records returned.
-
-5) Redundant records with summations
-
-There were 26 lines with redundant data containing summations of some columns. After
-identifying these records with the use of text facets, I removed them from the dataset.
+create view aggregated_data as
+select "Agency Name",
+avg("Schedule Variance (%)") as "Avg. Scedule Variance(%)",
+avg("Cost Variance (%)") as "Avg. Cost Variance(%)",
+count(*) as "Projects Number",
+avg("Lifecycle Cost") as "Avg. Lifecycle Cost ($ M)",
+avg("Projected/Actual Cost ($ M)") as "Avg. Project Cost ($ M)"
+from analysis_data
+where "Start Date" >= '2006-01-01' and "Projected/Actual Project Completion Date (B2)" < '2013-01-01'
+group by "Agency Name" ;
  
+
+The aggregated data were manually enriched by deriving the official acronym
+of the U.S departments from the document that can be found at
+https://nsarchive2.gwu.edu/NSAEBB/NSAEBB216/app1.pdf . These acronyms
+are used as labels for the circles in the bubble chart instead of the full
+department names, to improve readability.

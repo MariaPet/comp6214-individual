@@ -9,7 +9,6 @@ function wrap(text, width) {
             y = text.attr("y"),
             x = text.attr("x"),
             dy = parseFloat(text.attr("dy")) || 0,
-            // dx = parseFloat(text.attr("dx")),
             tspan = text.text(null).append('tspan').attr("x", x).attr("y", y).attr("dy", dy + "em");
         while(word = words.pop()) {
             line.push(word);
@@ -155,7 +154,7 @@ function redrawSVG(dataset) {
         d3.select(this).attr('r', function(d) {
             return Math.sqrt(d["Projects Number"]/Math.PI) * 5 * 1.2;
         }).attr("opacity", 1);
-        // tooltip.moveToFront();
+        //position tooltip
         tooltip.transition()
             .duration(200)
             .style("opacity", 1);
@@ -231,22 +230,18 @@ function redrawSVG(dataset) {
     })
 
     //legend
-
-    // var legendSvg = d3.select('main').append('svg')
-    // .attr('width', legendWidth + legendMargin.left + legendMargin.right)
-    // .attr('height', (dataset.length+1)*35 + legendMargin.top + legendMargin.bottom)
-    // .attr('transform', 'translate('+legendMargin.left+',0)')
+    var legendItemHeight = 35;
     var legendSvg = svgParent.append("g")
     .attr('transform',  'translate('+(width + margin.left + margin.right + legendMargin.right)+','+margin.top+')')
     .attr('width', legendWidth)
-    .attr('height', (dataset.length+1)*35 + legendMargin.top + legendMargin.bottom)
+    .attr('height', (dataset.length+1)*legendItemHeight + legendMargin.top + legendMargin.bottom)
     
-    
+    //legend background
     legendSvg.append("rect")
     .attr("x", 0)
     .attr("y", 0)
     .attr("width", legendWidth)
-    .attr("height", (dataset.length+1)*35)
+    .attr("height", (dataset.length+1)*legendItemHeight)
     .attr("fill", d3.rgb("#e0e0eb"))
     .attr("stroke", "black")
     .attr('stroke-width', "1")
@@ -254,14 +249,15 @@ function redrawSVG(dataset) {
 
     legendSvg.append("text").text("Department of :")
     .attr("text-anchor", "right")
-    .attr('y', 35/2)
+    .attr('y', legendItemHeight/2)
     .attr('x', legendMargin.left)
 
+    //legend sorting
     legendSvg.append("text").text("Sort by avg. project cost")
     .attr("text-anchor", "left")
     .style("font", "bold 10px sans-serif")
     .attr("text-decoration", "underline")
-    .attr('y', 35/2)
+    .attr('y', legendItemHeight/2)
     .attr("transform", "translate("+ (legendWidth-9*legendMargin.left) +",0)")
     .style("cursor", "pointer")
     .on("click", function() {
@@ -273,7 +269,7 @@ function redrawSVG(dataset) {
             legendSvg.selectAll(".legendItem")
             .sort(function(a, b){return a["Avg. Project Cost ($ M)"] - b["Avg. Project Cost ($ M)"]})
             transition.selectAll(".legendItem").delay(delay)
-            .attr("transform",function(d, i) { return ("translate(0," +(i*35 + 35)+")" )})
+            .attr("transform",function(d, i) { return ("translate(0," +(i*legendItemHeight + legendItemHeight)+")" )})
 
         }
         else {
@@ -281,21 +277,22 @@ function redrawSVG(dataset) {
             legendSvg.selectAll(".legendItem")
             .sort(function(a, b){return a["Projects Number"] - b["Projects Number"]})
             transition.selectAll(".legendItem").delay(delay)
-            .attr("transform",function(d, i) { return ("translate(0," +(i*35 + 35)+")" )})
+            .attr("transform",function(d, i) { return ("translate(0," +(i*legendItemHeight + legendItemHeight)+")" )})
         }
     })
 
+    //legend items
     var items = legendSvg.selectAll(".legendItem")
     .data(dataset.sort(function(a, b){return a["Projects Number"] - b["Projects Number"]}))
     .enter().append("g")
     .attr("class","legendItem")
-    .attr("transform",function(d, i) { return ("translate(0," +(i*35 + 35)+")" )})
+    .attr("transform",function(d, i) { return ("translate(0," +(i*legendItemHeight + legendItemHeight)+")" )})
     
-
+    //Legend item background
     items.append("rect").attr('class', "legend-separator")
     .attr("x", 0)
     .attr("width", legendWidth)
-    .attr("height", 35)
+    .attr("height", legendItemHeight)
     .attr("fill", d3.rgb("#e0e0eb"))
     .attr("stroke", "black")
     .attr('stroke-width', "1")
@@ -335,12 +332,13 @@ function redrawSVG(dataset) {
         d3.selectAll(".quarter-label").style("font-weight", "normal").style("font-size", "12px")
     });
 
+    //legend item project bar
     items.append('rect')
     .attr('width', function(d) {
         var dProject = ((maxProject - minProject) - (maxProject - d["Projects Number"])) / (maxProject - minProject);
         return (legendWidth * dProject) || 5;
     })
-    .attr("height", 35)
+    .attr("height", legendItemHeight)
     .attr("fill", d3.rgb("#003399"))
     .attr("x", function(d) {
         var dProject = ((maxProject - minProject) - (maxProject - d["Projects Number"])) / (maxProject - minProject);
@@ -349,21 +347,23 @@ function redrawSVG(dataset) {
     .style("pointer-events", "none")
     .attr("opacity", "0.5")
 
+    //Legend item cost circle
     items.append('circle')
     .attr("r", 5)
     .attr("fill", function(d) {
         return colour(d["Avg. Project Cost ($ M)"]);
     })
-    .attr("transform", "translate("+ legendMargin.left +","+ (35*0.5) +")")
+    .attr("transform", "translate("+ legendMargin.left +","+ (legendItemHeight*0.5) +")")
     .style("pointer-events", "none");
 
+    //Legend item label
     items.append("text")
     .datum(function(d) {return {name: d["Agency Name"].replace('Department of ','')};})
     .text(function(d) { return d.name; })
     .style("font", "11px sans-serif")
     .attr("text-anchor", "right")
     .attr("alignment-baseline", "middle")
-    .attr("transform", "translate("+ 2*legendMargin.left +","+ ( 35*0.5) +")")
+    .attr("transform", "translate("+ 2*legendMargin.left +","+ ( legendItemHeight*0.5) +")")
     .style("pointer-events", "none");
 
     items.append("text")
@@ -393,8 +393,7 @@ function redrawSVG(dataset) {
     var mainGradient = svgDefs.append('linearGradient')
                 .attr('id', 'mainGradient');
 
-    // Create the stops of the main gradient. Each stop will be assigned
-    // a class to style the stop using CSS.
+    // Create the stops of the main gradient. 
     mainGradient.append('stop')
         .attr('offset', '0')
         .attr('stop-color', "#e6b3ff");
@@ -433,7 +432,6 @@ function redrawSVG(dataset) {
     .attr('transform', 'translate('+(-2*tooltipPadding)+', '+(-1.5*tooltipPadding)+')')
     .attr("fill", "black")
     .attr("opacity", "0.5")
-    // .attr("dominant-baseline", "central")
     
     costIndexGroup.append('text').text('test')
     .attr("x", tooltipPadding)
@@ -455,16 +453,22 @@ $(document).ready(function() {
     $(window).resize( function() {
         redrawSVG(dataset);
     });
-    // d3.json("http://students.ecs.soton.ac.uk/mp2n17/comp6214-individual:5000/api/aggregated", function(error, dataset) {
-    //     if(error) {
-    //         console.log(error);
-    //     }
-    //     // debugger;
-    //     redrawSVG(dataset);
-        
-    //     $(window).resize( function() {
-    //         redrawSVG(dataset);
-    //     });
-    // })
+    $(document).ready(function() {
+        var hashIndex = location.href.indexOf("#");
+        var panelID = "";
+        if (hashIndex > 0) {
+            var panelID = location.href.substring(hashIndex + 1)
+            $('.panel-collapse').collapse('hide')
+            if ($('#'+panelID).length) {
+                $('#'+panelID).collapse("show")
+            }
+            else {
+                $('#description').collapse("show")
+            }
+        }
+        else {
+            $('#description').collapse("show")
+        }
+    });
 });
 
